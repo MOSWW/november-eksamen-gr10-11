@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * 'unsafe-inline'; font-src * data:; img-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval';">
+<title>November Eksamen — Bestuurstelsel (Graad 10 &amp; 11)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f172a;--navy2:#1e293b;
+  --accent:#f97316;
+  --blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+  --border:rgba(255,255,255,0.08);
+  --bg2:#f1f5f9;--card:#ffffff;--card-border:#e2e8f0;
+  --radius:10px;--radius-lg:14px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:#1e293b;min-height:100vh;display:flex}
+.sidebar{width:240px;min-height:100vh;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-brand{padding:24px 20px 16px}
+.sidebar-brand h1{font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
+.sidebar-brand p{font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:3px}
+.sidebar-graad{padding:8px 12px 4px}
+.sidebar-graad-label{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;padding:0 12px;margin-bottom:6px}
+.graad-tab{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;color:var(--text2);font-size:13.5px;font-weight:400;margin-bottom:2px;transition:all 0.15s}
+.graad-tab:hover{background:rgba(255,255,255,0.07);color:var(--text)}
+.graad-tab.active{background:rgba(255,255,255,0.15);color:var(--text);font-weight:500}
+.graad-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-g10{background:#3b82f6}
+.dot-g11{background:#f97316}
+.sidebar-divider{height:1px;background:var(--border);margin:8px 20px}
+.sidebar-nav{flex:1;padding:4px 12px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;color:var(--text2);font-size:13.5px;margin-bottom:2px;transition:all 0.15s}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:var(--text)}
+.nav-item.active{background:var(--accent);color:#fff}
+.nav-item i{font-size:17px;flex-shrink:0}
+.sidebar-user{padding:16px 20px;border-top:1px solid var(--border)}
+.user-row{display:flex;align-items:center;gap:10px}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.user-role{font-size:11px;color:var(--text3)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid var(--card-border);padding:0 28px;height:54px;display:flex;align-items:center;gap:16px;flex-shrink:0}
+.graad-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600}
+.graad-pill-10{background:#eff6ff;color:#1d4ed8}
+.graad-pill-11{background:#fff7ed;color:#c2410c}
+.graad-pill .dot{width:7px;height:7px;border-radius:50%}
+.sperdatums{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px}
+.sperdatums strong{color:var(--accent);text-transform:uppercase;font-size:10px;letter-spacing:0.08em;margin-right:4px}
+.sperd-item{color:#64748b}
+.sperd-item b{color:#1e293b;font-weight:500}
+.sperd-sep{color:#cbd5e1}
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:16px}
+.online-lbl{font-size:12px;color:#64748b;margin-left:6px}
+.content{flex:1;padding:28px;overflow-y:auto}
+.page{display:none}
+.page.active{display:block}
+.section-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);margin-bottom:20px;overflow:hidden}
+.section-header{padding:16px 20px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-between}
+.section-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#475569}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:16px 18px}
+.stat-card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:#94a3b8;margin-bottom:6px}
+.stat-card .val{font-size:26px;font-weight:600;color:#0f172a}
+.stat-card .sub{font-size:12px;color:#94a3b8;margin-top:2px}
+.info-row{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:20px}
+.info-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:18px 20px}
+.info-card.blue-tint{border-left:4px solid var(--blue)}
+.info-card.green-tint{border-left:4px solid var(--green)}
+.info-card.orange-tint{border-left:4px solid var(--accent)}
+.info-card-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.info-card-head i{font-size:18px}
+.info-card-head.blue i{color:var(--blue)}
+.info-card-head.green i{color:var(--green)}
+.info-card-head.orange i{color:var(--accent)}
+.info-card h3{font-size:14px;font-weight:600;color:#1e293b}
+.info-card p{font-size:13px;color:#64748b;line-height:1.6}
+.rooster-table{width:100%;border-collapse:collapse}
+.rooster-table th{padding:10px 16px;text-align:left;font-size:12px;font-weight:500;color:#94a3b8;border-bottom:1px solid var(--card-border);white-space:nowrap}
+.rooster-table td{padding:13px 16px;font-size:13.5px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.rooster-table tr:last-child td{border-bottom:none}
+.rooster-table tr:hover td{background:#fafbfc}
+.vak-bold{font-weight:600;color:#0f172a;font-size:14px}
+.status-badge{display:inline-flex;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap}
+.status-opstel{background:#f1f5f9;color:#475569}
+.status-gereed{background:#eff6ff;color:#1d4ed8}
+.status-geskeduleer{background:#fef3c7;color:#92400e}
+.status-nasien{background:#fdf4ff;color:#7e22ce}
+.status-herskryf{background:#fee2e2;color:#991b1b}
+.status-afgehandel{background:#dcfce7;color:#166534}
+.prog-ring{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.prog-bar-sm{width:60px;height:5px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.prog-fill-sm{height:100%;background:var(--green);border-radius:99px;transition:width 0.3s}
+.add-btn{background:var(--navy);color:#fff;border:none;padding:6px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.add-btn:hover{background:var(--navy2)}
+.empty-state{padding:40px;text-align:center;color:#94a3b8;font-size:14px}
+.checklist-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.check-panel{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);overflow:hidden}
+.check-panel-head{padding:14px 18px;border-bottom:1px solid var(--card-border)}
+.check-panel-head h3{font-size:13px;font-weight:600;color:#1e293b}
+.fase-lbl{padding:6px 18px 2px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#94a3b8}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:8px 18px;cursor:pointer}
+.check-item:hover{background:#fafbfc}
+.check-item input[type=checkbox]{margin-top:2px;accent-color:var(--accent);width:14px;height:14px;flex-shrink:0;cursor:pointer}
+.check-item-text{font-size:13px;color:#374151;line-height:1.4;flex:1}
+.check-item-text.done{text-decoration:line-through;color:#94a3b8}
+.rol-tag{font-size:10px;padding:2px 7px;border-radius:99px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.rol-vk{background:#eff6ff;color:#1d4ed8}
+.rol-ko{background:#fdf4ff;color:#7e22ce}
+.rol-lb{background:#f0fdf4;color:#166534}
+.flags-table{width:100%;border-collapse:collapse}
+.flags-table th{padding:10px 16px;text-align:left;font-size:12px;font-weight:500;color:#94a3b8;border-bottom:1px solid var(--card-border)}
+.flags-table td{padding:12px 16px;font-size:13.5px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.flags-table tr:last-child td{border-bottom:none}
+.flag-badge{display:inline-flex;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:500}
+.flag-hoog{background:#fee2e2;color:#991b1b}
+.flag-medium{background:#fef3c7;color:#92400e}
+.flag-laag{background:#f0fdf4;color:#166534}
+.flag-tipe{background:#f1f5f9;color:#334155}
+.flag-aangemeld{background:#f0fdf4;color:#166534}
+.flag-uitstaande{background:#fee2e2;color:#991b1b}
+.bystand-row{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.bystand-tyd{font-size:13px;font-weight:600;min-width:150px;font-family:'DM Mono',monospace;flex-shrink:0}
+.bystand-vak{font-size:14px;font-weight:500;flex:1;min-width:140px}
+.bystand-persoon{font-size:13px;color:#64748b;min-width:120px}
+.bystand-tegnies{font-size:13px;color:#7e22ce;min-width:120px}
+.bystand-actions{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.bystand-status{font-size:12px;padding:4px 12px;border-radius:99px;font-weight:500;flex-shrink:0}
+.bystand-aktief{background:#dcfce7;color:#166534}
+.bystand-wag{background:#f1f5f9;color:#64748b}
+.meet-btn{display:inline-flex;align-items:center;gap:5px;background:#1d4ed8;color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none}
+.meet-btn:hover{background:#1e40af}
+.icon-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:var(--radius);font-size:15px}
+.icon-btn.edit{color:#64748b}
+.icon-btn.edit:hover{background:#f1f5f9;color:#1e293b}
+.icon-btn.del{color:#ef4444}
+.icon-btn.del:hover{background:#fee2e2}
+.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:12px;font-weight:500;color:#475569;text-transform:uppercase;letter-spacing:0.05em}
+.form-group input,.form-group select{font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);background:#fff;color:#1e293b}
+.form-actions{padding:0 20px 20px;display:flex;justify-content:flex-end;gap:8px}
+.btn-sec{background:#fff;border:1px solid var(--card-border);color:#475569;padding:8px 18px;border-radius:var(--radius);font-family:inherit;font-size:13px;cursor:pointer}
+.btn-pri{background:var(--navy);color:#fff;border:none;padding:8px 18px;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer}
+.admin-list{padding:0 20px 20px}
+.admin-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius);margin-bottom:8px;background:#fafbfc}
+.admin-item-info{flex:1}
+.admin-item-info strong{font-size:14px;display:block}
+.admin-item-info span{font-size:12px;color:#64748b}
+.del-btn{background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:4px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:var(--radius-lg);width:480px;max-width:95vw;overflow:hidden}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-between}
+.modal-head h2{font-size:16px;font-weight:600}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8}
+.modal-body{padding:20px 22px}
+.modal-body .form-group{margin-bottom:14px}
+.modal-body .form-group label{font-size:12px;font-weight:500;color:#475569;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:5px}
+.modal-body .form-group input,.modal-body .form-group select{width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--card-border);display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:10px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:9999}
+.toast.show{opacity:1}
+.gemis-groep{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);margin-bottom:14px;overflow:hidden}
+.gemis-groep-head{padding:13px 20px;background:#fafbfc;border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:12px}
+.gemis-groep-naam{font-size:14px;font-weight:600;flex:1}
+.gemis-groep-datum{font-size:12px;color:#64748b;font-family:'DM Mono',monospace}
+.gemis-groep-tel{font-size:12px;background:#f1f5f9;color:#475569;padding:2px 10px;border-radius:99px}
+.gemis-row{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid #f8fafc;flex-wrap:wrap}
+.gemis-row:last-child{border-bottom:none}
+.gemis-leerder{font-size:14px;font-weight:500;min-width:160px}
+.gemis-rede{font-size:12px;color:#64748b;flex:1}
+.gemis-herskryf{font-size:12px;font-family:'DM Mono',monospace;color:#64748b;min-width:90px}
+.gemis-actions{display:flex;gap:6px;align-items:center;margin-left:auto}
+.ko-sked-btn{display:inline-flex;align-items:center;gap:5px;background:#7e22ce;color:#fff;border:none;padding:4px 12px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+.ko-sked-btn:hover{opacity:0.85}
+.ko-sked-btn.gesked{background:#dcfce7;color:#166534}
+.status-uitstaande{background:#fef3c7;color:#92400e}
+.status-geskryf{background:#dcfce7;color:#166534}
+.status-gemis-afwesig{background:#fee2e2;color:#991b1b}
+.status-geskeduleer-ko{background:#fdf4ff;color:#7e22ce}
+.oorsig-filter-btn{font-family:inherit;font-size:12px;padding:4px 12px;border:1px solid var(--card-border);background:#fff;color:#64748b;cursor:pointer;border-radius:0}
+.oorsig-filter-btn:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.oorsig-filter-btn:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.oorsig-filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.status-aanwesig{background:#dcfce7;color:#166534}
+.status-afwesig{background:#fee2e2;color:#991b1b}border:1px solid var(--card-border);border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.12s;background:#fff;user-select:none}
+.reg-card:hover{border-color:#94a3b8}
+.reg-card.aanwesig{background:#f0fdf4;border-color:#86efac}
+.reg-card.afwesig{background:#fee2e2;border-color:#fca5a5}
+.reg-card .reg-naam{font-size:13.5px;font-weight:500;flex:1}
+.reg-card .reg-status{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500;flex-shrink:0}
+.reg-card.aanwesig .reg-status{background:#dcfce7;color:#166534}
+.reg-card.afwesig .reg-status{background:#fee2e2;color:#991b1b}
+.reg-card.ongemark .reg-status{background:#f1f5f9;color:#94a3b8}
+.date-row{display:flex;align-items:flex-start;gap:12px;padding:10px 20px;border-bottom:1px solid var(--card-border)}
+.date-chip{font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;flex-shrink:0;background:#eff6ff;color:#1d4ed8;font-family:'DM Mono',monospace;min-width:52px;text-align:center}
+.date-chip.warn{background:#fef3c7;color:#92400e}
+.date-chip.red{background:#fee2e2;color:#991b1b}
+.date-lbl{font-size:13px;color:#374151;line-height:1.5;padding-top:2px}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1>November Eksamen</h1>
+    <p>Graad 10 &amp; 11 · 2026</p>
+  </div>
+  <div class="sidebar-graad">
+    <div class="sidebar-graad-label">Graadgroep</div>
+    <div class="graad-tab active" id="gtab-10" onclick="setGraad('Graad 10',this)">
+      <span class="graad-dot dot-g10"></span>Graad 10
+    </div>
+    <div class="graad-tab" id="gtab-11" onclick="setGraad('Graad 11',this)">
+      <span class="graad-dot dot-g11"></span>Graad 11
+    </div>
+  </div>
+  <div class="sidebar-divider"></div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Dashboard</div>
+    <div class="nav-item" onclick="showPage('bystand',this)"><i class="ti ti-calendar-event" aria-hidden="true"></i>Bystand &amp; Meet</div>
+    <div class="nav-item" onclick="showPage('afwesig',this)"><i class="ti ti-users" aria-hidden="true"></i>Afwesighede</div>
+    <div class="nav-item" onclick="showPage('flags',this)"><i class="ti ti-flag" aria-hidden="true"></i>Invigilator Flags</div>
+    <div class="nav-item" onclick="showPage('gemis',this)"><i class="ti ti-calendar-x" aria-hidden="true"></i>Gemiste Vraestelle</div>
+    <div class="nav-item" onclick="showPage('konsessies',this)"><i class="ti ti-clock-shield" aria-hidden="true"></i>Konsessies &amp; Reëlings</div>
+    <div class="nav-item" onclick="showPage('moderering',this)"><i class="ti ti-clipboard-check" aria-hidden="true"></i>Vraestel Checklys</div>
+  </nav>
+  <div class="sidebar-divider" style="margin-top:auto"></div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="graad-pill graad-pill-10" id="topPill">
+      <span class="dot" id="topDot" style="background:#3b82f6"></span>
+      <span id="topTeks">Graad 10</span>
+    </div>
+    <div class="sperdatums">
+      <strong>November Eksamen 2026</strong>
+      <span class="sperd-item">2 – 26 Nov</span>
+      <span class="sperd-sep">·</span>
+      <span class="sperd-item">Stemdag <b>4 Nov</b></span>
+    </div>
+    <div class="online-dot"></div>
+    <span class="online-lbl">Sisteem aanlyn</span>
+    <span id="syncStatus" style="font-size:12px;color:#22c55e;margin-left:12px;font-weight:500"></span>
+  </div>
+
+  <div class="content">
+
+    <div class="page active" id="page-dashboard">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="info-row">
+        <div class="info-card blue-tint">
+          <div class="info-card-head blue"><i class="ti ti-clock" aria-hidden="true"></i><h3>Belangrike herinnering</h3></div>
+          <p style="margin-bottom:12px">Vraestelle moet geskeduleer wees op Dugga sodra pre-moderasie afgehandel is. Gebruik die vorm om skedulering te versoek.</p>
+          <a href="#" onclick="alert('Vervang hierdie skakel met die November-eksamen se skeduleringsvorm (soek href=&quot;#&quot; naby Skeduleringsvorm invul in die kode).');return false;" style="display:inline-flex;align-items:center;gap:6px;background:#1d4ed8;color:#fff;padding:7px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;text-decoration:none"><i class="ti ti-external-link" aria-hidden="true" style="font-size:14px"></i>Skeduleringsvorm invul</a>
+        </div>
+      </div>
+
+      <div class="section-card" style="margin-bottom:20px">
+        <div class="section-header"><span class="section-title"><i class="ti ti-calendar-event" aria-hidden="true" style="margin-right:6px;vertical-align:-2px"></i>Datums om te onthou</span></div>
+        <div style="padding:4px 0 8px">
+          <div class="date-row"><span class="date-chip">2–26 Nov</span><span class="date-lbl">November Eksamen</span></div>
+          <div class="date-row"><span class="date-chip">4 Nov</span><span class="date-lbl">Stemdag &nbsp;·&nbsp; <b>Vakansiedag</b></span></div>
+          <div class="date-row"><span class="date-chip warn">27 Nov</span><span class="date-lbl">Gemiste vraestelle</span></div>
+          <div class="date-row"><span class="date-chip warn">2 Des</span><span class="date-lbl">Borrelindienings sluit en alle vraestelle met memorandums op Dugga gepubliseer &nbsp;·&nbsp; <b>vergunning vir Lewenswetenskappe Vr 2 (Graad 11) en Geografie Prakties en FW Vr 2 (Graad 10)</b></span></div>
+          <div class="date-row"><span class="date-chip warn">3 Des</span><span class="date-lbl">Leerders kontroleer vraestelle op Dugga</span></div>
+          <div class="date-row" style="border-bottom:none"><span class="date-chip red">9 Des</span><span class="date-lbl">Graad 4–11 jaareindrapporte uitgereik &nbsp;·&nbsp; <b>keerdatum borrel instandhouding (KW1 – 2027)</b></span></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title" id="roosterTitle">Eksamenrooster status — Graad 10</span>
+          <div style="display:flex;align-items:center;gap:8px" id="roosterKOSeksie">
+            <div id="roosterKOSlot" style="display:flex;align-items:center;gap:6px">
+              <i class="ti ti-lock" aria-hidden="true" style="font-size:14px;color:#94a3b8"></i>
+              <input id="roosterKOWag" type="password" placeholder="Koördineerder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+              <button onclick="roosterOntsluitKO()" style="background:var(--navy);color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit</button>
+              <span id="roosterKOFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+            </div>
+            <div id="roosterKOOntsluit" style="display:none;align-items:center;gap:8px">
+              <span style="font-size:12px;color:#166534;font-weight:500"><i class="ti ti-lock-open" aria-hidden="true" style="vertical-align:-2px;margin-right:3px"></i>Koördineerder</span>
+              <button class="add-btn" onclick="openAddEksamen()"><i class="ti ti-plus" aria-hidden="true"></i>Voeg eksamen by</button>
+              <button onclick="roosterSluitKO()" style="background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+            </div>
+          </div>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Datum</th><th>Tyd</th><th>Vak</th><th>Tydsduur</th><th>Sperdatum (Dugga)</th><th>Voortgang</th><th>Status</th><th>Verander status</th><th></th></tr></thead>
+          <tbody id="roosterBody"></tbody>
+        </table>
+        <div class="empty-state" id="roosterEmpty" style="display:none">Geen eksamens vir hierdie graad nie. Klik "Voeg eksamen by" om te begin.</div>
+      </div>
+    </div>
+
+    <div class="page" id="page-bystand">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title" id="bystandTitle">Bystand &amp; Meet — Graad 10</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div id="bystandKOSlot" style="display:flex;align-items:center;gap:6px">
+              <i class="ti ti-lock" aria-hidden="true" style="font-size:14px;color:#94a3b8"></i>
+              <input id="bystandKOWag" type="password" placeholder="Koördineerder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+              <button onclick="bystandOntsluitKO()" style="background:var(--navy);color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit</button>
+              <span id="bystandKOFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+            </div>
+            <div id="bystandKOOntsluit" style="display:none;align-items:center;gap:8px">
+              <span style="font-size:12px;color:#166534;font-weight:500"><i class="ti ti-lock-open" aria-hidden="true" style="vertical-align:-2px;margin-right:3px"></i>Koördineerder</span>
+              <button onclick="bystandSluitKO()" style="background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+            </div>
+          </div>
+        </div>
+        <div id="bystandLys" style="padding:16px"></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-flags">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title" id="flagsTitle">Invigilator Flags — Graad 10</span>
+          <button class="add-btn" onclick="openAddFlag()"><i class="ti ti-plus" aria-hidden="true"></i>Meld flag aan</button>
+        </div>
+        <table class="flags-table">
+          <thead><tr><th>Datum</th><th>Vraestel</th><th>Leerder</th><th>Tipe flag</th><th>Kommentaar</th><th>Status</th><th>Uitkoms</th><th></th></tr></thead>
+          <tbody id="flagsBody"></tbody>
+        </table>
+        <div class="empty-state" id="flagsEmpty">Geen flags aangemeld nie.</div>
+      </div>
+    </div>
+
+    <div class="page" id="page-afwesig">
+
+      <!-- Toegangsbeheer balk -->
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;background:#fff;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:14px 20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <i class="ti ti-lock" aria-hidden="true" style="color:#94a3b8;font-size:16px"></i>
+          <span style="font-size:13px;color:#64748b">Redigeer as:</span>
+          <span id="afwesigRolToon" style="font-size:13px;font-weight:500;color:#1e293b">Onderwyser</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="afwesigWagKO" type="password" placeholder="Koördineerder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:210px">
+          <button onclick="afwesigOntsluitKO()" style="background:var(--navy);color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit KO</button>
+          <button id="afwesigSluitBtn" onclick="afwesigSluitKO()" style="display:none;background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+        </div>
+        <span id="afwesigWagFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+      </div>
+
+      <!-- KO: Klaslyste per vraestel -->
+      <div class="section-card" id="koKlaslysPanel" style="display:none;margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title">Klaslyste per vraestel</span>
+          <span style="font-size:12px;color:#94a3b8">Laai per vak op, of alles saam via 'n volledige Sheet</span>
+        </div>
+        <div style="padding:14px 20px;background:#fafbfc;border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <div style="font-size:13px;font-weight:500;color:#1e293b;margin-bottom:2px">Laai volledige Google Sheet op (alle oortjies)</div>
+            <div style="font-size:12px;color:#64748b">In Google Sheets: File → Download → Microsoft Excel (.xlsx). Elke oortjie se naam (bv. "Toer", "Wisk", "AFR") word outomaties by die ooreenstemmende vak(ke) gevoeg.</div>
+          </div>
+          <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:7px 14px;border-radius:var(--radius);background:var(--navy);color:#fff;flex-shrink:0">
+            <i class="ti ti-file-spreadsheet" aria-hidden="true"></i>Kies XLSX-lêer
+            <input type="file" accept=".xlsx,.xls" style="display:none" onchange="laaiVolledigeKlaslysLeer(this)">
+          </label>
+        </div>
+        <div style="padding:16px 20px" id="koKlaslysLys"></div>
+      </div>
+
+      <!-- Onderwyser: Kies vraestel en maak register oop -->
+      <div class="section-card" style="margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title" id="afwesigTitle">Afwesighede — Graad 10</span>
+        </div>
+        <div style="padding:14px 20px;background:#eff6ff;border-bottom:1px solid var(--card-border);font-size:12.5px;color:#1e3a5f;line-height:1.7">
+          <b>Hoe werk dit?</b> Kies 'n vraestel en datum, maak die register oop — elke leerder wys eers <b>Ongemerk</b>. Klik op 'n leerder om deur die statusse te wissel: Ongemerk → Aanwesig → Afwesig → Ongemerk. Stoor die register wanneer almal gemerk is; leerders wat as Afwesig gestoor word, verskyn outomaties onder "Gemiste Vraestelle". Sodra 'n vraestel se register gestoor is, <b>verdwyn dit uit die "Kies vraestel"-lys</b> hieronder (om te keer dat dit per ongeluk weer geopen/oorgeskryf word) — dit bly steeds sigbaar in "Gestoorde registers" onderaan die bladsy.
+        </div>
+        <div style="padding:20px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:500px">
+            <div class="form-group">
+              <label>Kies vraestel</label>
+              <select id="registerEksamen" style="font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);background:#fff;color:#1e293b" onchange="toonKlaslysStatus()">
+                <option value="">— Kies vraestel —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Datum</label>
+              <input id="registerDatum" type="date" style="font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius)">
+            </div>
+          </div>
+          <div id="klaslysStatusToon" style="margin-top:10px;font-size:13px;color:#64748b"></div>
+          <button class="add-btn" style="margin-top:14px" onclick="oopRegister()"><i class="ti ti-clipboard-list" aria-hidden="true"></i>Maak aftekenregister oop</button>
+        </div>
+      </div>
+
+      <!-- Aftekenregister -->
+      <div class="section-card" id="afwesigRegister" style="display:none;margin-bottom:16px">
+        <div class="section-header">
+          <div>
+            <span class="section-title" id="registerTitel">Register</span>
+            <span id="registerTelling" style="font-size:12px;color:#94a3b8;margin-left:10px"></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="registerSoek" oninput="filterRegister()" placeholder="Soek leerder..." style="font-family:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+            <button class="add-btn" onclick="stoorRegister()"><i class="ti ti-device-floppy" aria-hidden="true"></i>Stoor register</button>
+            <button onclick="sluitRegister()" style="background:none;border:1px solid var(--card-border);padding:6px 12px;border-radius:var(--radius);font-family:inherit;font-size:13px;cursor:pointer;color:#64748b">Terug</button>
+          </div>
+        </div>
+        <div style="padding:8px 20px;background:#fafbfc;border-bottom:1px solid var(--card-border);display:flex;gap:16px;font-size:12px;color:#64748b">
+          <span><span id="telGemerk" style="font-weight:600;color:#1e293b">0</span> gemerk</span>
+          <span><span id="telOngemerk" style="font-weight:600;color:#ef4444">0</span> ongemerk</span>
+          <span style="margin-left:auto;color:#94a3b8">Verstek: Ongemerk &nbsp;·&nbsp; Klik: Ongemerk → Aanwesig → Afwesig → Ongemerk</span>
+        </div>
+        <div id="registerLys" style="padding:14px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:0 24px"></div>
+      </div>
+
+      <!-- Gestooorde registers oorsig -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Gestooorde registers</span>
+          <button class="add-btn" onclick="openAddEnkelAfwesig()"><i class="ti ti-plus" aria-hidden="true"></i>Voeg leerder by</button>
+        </div>
+        <div style="padding:10px 20px;border-bottom:1px solid var(--card-border);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <select id="afwesigEksamFilter" onchange="renderAfwesigOorsig()" style="font-family:inherit;font-size:13px;padding:5px 10px;border-radius:var(--radius);border:1px solid var(--card-border);background:#fff;color:#1e293b">
+            <option value="all">Alle vraestelle</option>
+          </select>
+          <div style="display:flex;gap:4px">
+            <button class="oorsig-filter-btn active" id="ofBtn-all" onclick="setOorsigFilter('all',this)">Almal</button>
+            <button class="oorsig-filter-btn" id="ofBtn-aanwesig" onclick="setOorsigFilter('aanwesig',this)">Slegs aanwesig</button>
+            <button class="oorsig-filter-btn" id="ofBtn-afwesig" onclick="setOorsigFilter('afwesig',this)">Slegs afwesig</button>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;margin-left:auto;flex-wrap:wrap">
+            <span style="font-size:12px;color:#64748b">Leerbestuurder:</span>
+            <input id="afwesigWagLB" type="password" placeholder="LB wagwoord" style="font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--card-border);border-radius:var(--radius);width:130px">
+            <button onclick="afwesigOntsluitLB()" style="background:#166534;color:#fff;border:none;padding:4px 10px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit</button>
+            <button id="afwesigLBSluitBtn" onclick="afwesigSluitLB()" style="display:none;background:none;border:1px solid var(--card-border);padding:4px 10px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+          </div>
+          <span id="afwesigLBFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Leerder</th><th>Vraestel</th><th>Datum</th><th>Status</th><th>Rede</th><th id="afwesigAksieTh" style="display:none">Aksie (LB)</th><th></th></tr></thead>
+          <tbody id="afwesigBody"></tbody>
+        </table>
+        <div class="empty-state" id="afwesigEmpty">Geen registers gestoor nie.</div>
+      </div>
+
+    </div>
+
+    <div class="page" id="page-gemis">
+
+      <!-- Toegangsbeheer balk -->
+      <div id="gemisBalk" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;background:#fff;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:14px 20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <i class="ti ti-lock" aria-hidden="true" style="color:#94a3b8;font-size:16px"></i>
+          <span style="font-size:13px;color:#64748b">Redigeer as:</span>
+          <span id="gemisRolToon" style="font-size:13px;font-weight:500;color:#1e293b">Slegs lees</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="gemisWagBlokkies">
+          <div style="display:flex;gap:6px;align-items:center">
+            <input id="gemisWagLB" type="password" placeholder="Leerbestuurder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+            <button onclick="gemisOntsluit('lb')" style="background:#166534;color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit LB</button>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input id="gemisWagKO" type="password" placeholder="Koördineerder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+            <button onclick="gemisOntsluit('ko')" style="background:#7e22ce;color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit KO</button>
+          </div>
+          <button id="gemisSluitBtn" onclick="gemisSluit()" style="display:none;background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+        </div>
+        <span id="gemisWagFout" style="font-size:12px;color:#ef4444;display:none;width:100%">Verkeerde wagwoord.</span>
+      </div>
+
+      <!-- Oorsig gegroepeer per vraestel -->
+      <div id="gemisGroepe"></div>
+
+    </div>
+
+    <div class="page" id="page-konsessies">
+      <!-- Toegangsbeheer -->
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;background:#fff;border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:14px 20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <i class="ti ti-lock" aria-hidden="true" style="color:#94a3b8;font-size:16px"></i>
+          <span style="font-size:13px;color:#64748b">Redigeer as:</span>
+          <span id="konsRolToon" style="font-size:13px;font-weight:500;color:#1e293b">Slegs lees</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="konsWagLB" type="password" placeholder="Leerbestuurder-wagwoord" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:210px">
+          <button onclick="konsOntsluit()" style="background:#166534;color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit LB</button>
+          <button id="konsSluitBtn" onclick="konsSluit()" style="display:none;background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+        </div>
+        <span id="konsWagFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+      </div>
+
+      <!-- Konsessies -->
+      <div class="section-card" style="margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title">Konsessies — Ekstra tyd</span>
+          <button id="konsVoegByBtn" class="add-btn" style="display:none" onclick="openAddKonsessie()"><i class="ti ti-plus" aria-hidden="true"></i>Voeg by</button>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Leerder</th><th>Graad</th><th>Ekstra tyd</th><th>Nota</th><th id="konsAksieTh" style="display:none"></th></tr></thead>
+          <tbody id="konsBody"></tbody>
+        </table>
+        <div class="empty-state" id="konsEmpty">Geen konsessies aangemeld nie.</div>
+      </div>
+
+      <!-- Oorsese Leerders -->
+      <div class="section-card" style="margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title">Oorsese Leerders</span>
+          <button id="oorsesVoegByBtn" class="add-btn" style="display:none" onclick="openAddReeling('oorsees')"><i class="ti ti-plus" aria-hidden="true"></i>Voeg by</button>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Leerder</th><th>Graad</th><th>Nota</th><th id="oorsesAksieTh" style="display:none"></th></tr></thead>
+          <tbody id="oorsesBody"></tbody>
+        </table>
+        <div class="empty-state" id="oorsesEmpty">Geen oorsese leerders aangemeld nie.</div>
+      </div>
+
+      <!-- IGO Leerders -->
+      <div class="section-card" style="margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title">IGO Leerders — Vraestelle per e-pos</span>
+          <button id="igoVoegByBtn" class="add-btn" style="display:none" onclick="openAddReeling('igo')"><i class="ti ti-plus" aria-hidden="true"></i>Voeg by</button>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Leerder</th><th>Graad</th><th>E-posadres</th><th>Nota</th><th id="igoAksieTh" style="display:none"></th></tr></thead>
+          <tbody id="igoBody"></tbody>
+        </table>
+        <div class="empty-state" id="igoEmpty">Geen IGO leerders aangemeld nie.</div>
+      </div>
+
+      <!-- Ander Reëlings -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Ander Reëlings</span>
+          <button id="anderVoegByBtn" class="add-btn" style="display:none" onclick="openAddReeling('ander')"><i class="ti ti-plus" aria-hidden="true"></i>Voeg by</button>
+        </div>
+        <table class="rooster-table">
+          <thead><tr><th>Leerder</th><th>Graad</th><th>Reëling</th><th>Nota</th><th id="anderAksieTh" style="display:none"></th></tr></thead>
+          <tbody id="anderBody"></tbody>
+        </table>
+        <div class="empty-state" id="anderEmpty">Geen ander reëlings aangemeld nie.</div>
+      </div>
+    </div>
+
+    <div class="page" id="page-moderering">
+      <div class="section-card" style="margin-bottom:16px">
+        <div class="section-header">
+          <span class="section-title" id="moderTitle">Vraestel Checklys — Graad 10</span>
+        </div>
+      </div>
+      <div class="checklist-grid" id="moderChecklist"></div>
+    </div>
+
+  </div>
+</main>
+
+<div class="modal-bg" id="modalEksamen">
+  <div class="modal">
+    <div class="modal-head"><h2>Nuwe eksamen byvoeg</h2><button class="modal-close" onclick="closeModal('modalEksamen')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Vak</label><input id="eVak" placeholder="bv. Wiskunde Vraestel 1"></div>
+      <div class="form-group"><label>Datum</label><input id="eDatum" type="date"></div>
+      <div class="form-group"><label>Tyd</label><input id="eTyd" type="time" value="08:00"></div>
+      <div class="form-group"><label>Tydsduur</label>
+        <select id="eTydsduur">
+          <option>45 min</option>
+          <option>1 uur</option>
+          <option>1 uur 15 min</option>
+          <option>1 uur 30 min</option>
+          <option>1 uur 45 min</option>
+          <option selected>2 ure</option>
+          <option>2 ure 15 min</option>
+          <option>2 ure 30 min</option>
+          <option>2 ure 45 min</option>
+          <option>3 ure</option>
+          <option>3 ure 15 min</option>
+          <option>3 ure 30 min</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Sperdatum (Dugga)</label><input id="eSperdatum" type="date"></div>
+      <div class="form-group"><label>Graad</label>
+        <select id="eGraad"><option>Graad 10</option><option>Graad 11</option></select>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn-sec" onclick="closeModal('modalEksamen')">Kanselleer</button><button class="btn-pri" id="eksamenSaveBtn" onclick="saveEksamen()">Stoor</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBystand">
+  <div class="modal">
+    <div class="modal-head"><h2>Bystand invul</h2><button class="modal-close" onclick="closeModal('modalBystand')">×</button></div>
+    <div class="modal-body">
+      <div id="bInfo" style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--navy)"></div>
+      <div class="form-group"><label>Onderwyser (bystand)</label><input id="bPersoon" placeholder="bv. Jana van der Berg"></div>
+      <div class="form-group"><label>Tegniese bystand</label><input id="bTegnies" placeholder="bv. IT-ondersteuning / Naam"></div>
+      <div class="form-group"><label>Google Meet skakel</label><input id="bMeet" placeholder="https://meet.google.com/..."></div>
+    </div>
+    <div class="modal-foot"><button class="btn-sec" onclick="closeModal('modalBystand')">Kanselleer</button><button class="btn-pri" id="bystandSaveBtn" onclick="saveBystand()">Stoor</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modalFlag">
+  <div class="modal">
+    <div class="modal-head"><h2>Flag aanmeld</h2><button class="modal-close" onclick="closeModal('modalFlag')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Eksamen vraestel</label><input id="fVak" placeholder="bv. Wiskunde Vr 1"></div>
+      <div class="form-group"><label>Leerder</label><input id="fLeerder" placeholder="Naam van leerder"></div>
+      <div class="form-group"><label>Tipe flag</label>
+        <select id="fTipe">
+          <option value="">— Kies tipe —</option>
+          <option>Video</option>
+          <option>Screen Capture</option>
+          <option>Microphone</option>
+          <option>Out of app time</option>
+          <option>Live Monitoring</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Kommentaar <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">(opsioneel)</span></label><textarea id="fKommentaar" rows="2" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical" placeholder="Bykomende inligting..."></textarea></div>
+      <div class="form-group"><label>Datum</label><input id="fDatum" type="date"></div>
+      <div style="height:1px;background:var(--card-border);margin:4px 0 16px"></div>
+      <div id="lbSeksie" style="display:none">
+        <div class="form-group" style="margin-bottom:14px"><label>Status</label>
+          <select id="fStatus">
+            <option value="Hangende">Hangende</option>
+            <option value="Afgehandel">Afgehandel</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:14px"><label>Uitkoms <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">(leerbestuurder)</span></label><textarea id="fUitkoms" rows="2" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical" placeholder="Uitkoms na ondersoek..."></textarea></div>
+      </div>
+      <div id="lbWagwoord" style="background:#fafbfc;border:1px solid var(--card-border);border-radius:var(--radius);padding:12px 14px">
+        <p style="font-size:12px;color:#64748b;margin-bottom:8px"><i class="ti ti-lock" aria-hidden="true" style="margin-right:4px;vertical-align:-2px"></i>Leerbestuurder-seksie — voer wagwoord in om te ontsluit</p>
+        <div style="display:flex;gap:8px">
+          <input id="lbWag" type="password" placeholder="Wagwoord..." style="flex:1;font-family:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+          <button type="button" onclick="checkLbWag()" style="background:var(--navy);color:#fff;border:none;padding:7px 14px;border-radius:var(--radius);font-family:inherit;font-size:13px;cursor:pointer">Ontsluit</button>
+        </div>
+        <p id="lbFout" style="font-size:12px;color:#ef4444;margin-top:6px;display:none">Verkeerde wagwoord. Probeer weer.</p>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn-sec" onclick="closeModal('modalFlag')">Kanselleer</button><button class="btn-pri" id="flagSaveBtn" onclick="saveFlag()">Aanmeld</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalEnkelAfwesig">
+  <div class="modal">
+    <div class="modal-head"><h2>Leerder handmatig byvoeg</h2><button class="modal-close" onclick="closeModal('modalEnkelAfwesig')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px"><label>Leerder naam</label>
+        <input id="eaLeerder" placeholder="Naam van leerder..." style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Vraestel</label>
+        <select id="eaVraestel" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+          <option value="">— Kies vraestel —</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Datum</label>
+        <input id="eaDatum" type="date" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius)">
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="eaStatus" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+          <option value="Aanwesig">Aanwesig</option>
+          <option value="Afwesig">Afwesig</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeModal('modalEnkelAfwesig')">Kanselleer</button>
+      <button class="btn-pri" onclick="saveEnkelAfwesig()">Stoor</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalKonsessie">
+  <div class="modal">
+    <div class="modal-head"><h2>Konsessie byvoeg</h2><button class="modal-close" onclick="closeModal('modalKonsessie')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px"><label>Leerder</label>
+        <input id="kNaam" placeholder="Naam van leerder..." style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Graad</label>
+        <select id="kGraad" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b"><option>Graad 10</option><option>Graad 11</option></select>
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Ekstra tyd (minute)</label>
+        <select id="kEkstraTyd" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+          <option value="0">Geen ekstra tyd</option>
+          <option value="5">5 min</option>
+          <option value="10">10 min</option>
+          <option value="15">15 min</option>
+          <option value="20">20 min</option>
+          <option value="25">25 min</option>
+          <option value="30">30 min</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Nota <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">(opsioneel)</span></label>
+        <textarea id="kNota" rows="2" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical" placeholder="Bykomende inligting..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeModal('modalKonsessie')">Kanselleer</button>
+      <button class="btn-pri" id="konsSaveBtn" onclick="saveKonsessie()">Stoor</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalReeling">
+  <div class="modal">
+    <div class="modal-head"><h2 id="reelingTitel">Reëling byvoeg</h2><button class="modal-close" onclick="closeModal('modalReeling')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px"><label>Leerder</label>
+        <input id="rNaam" placeholder="Naam van leerder..." style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Graad</label>
+        <select id="rGraad" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b"><option>Graad 10</option><option>Graad 11</option></select>
+      </div>
+      <div class="form-group" style="margin-bottom:14px" id="rEposGroep">
+        <label>E-posadres</label>
+        <input id="rEpos" placeholder="leerder@epos.com" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+      </div>
+      <div class="form-group" style="margin-bottom:14px" id="rReelingGroep">
+        <label>Reëling</label>
+        <input id="rReeling" placeholder="Beskryf die reëling..." style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b">
+      </div>
+      <div class="form-group"><label>Nota <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">(opsioneel)</span></label>
+        <textarea id="rNota" rows="2" style="width:100%;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="closeModal('modalReeling')">Kanselleer</button>
+      <button class="btn-pri" id="reelingSaveBtn" onclick="saveReeling()">Stoor</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CHECKS={
+  voor:[
+    {id:"v1",text:"Vraestel geskep op Dugga",rol:"vk"},
+    {id:"v2",text:"Cover page ingevul",rol:"vk"},
+    {id:"v3",text:"Pre-moderering voltooi",rol:"vk"},
+    {id:"v4",text:"Skeduleringsvorm ingevul",rol:"vk"},
+    {id:"v5",text:"Skedulering bevestig",rol:"ko"}
+  ],
+  dag:[
+    {id:"d1",text:"Bystandrooster nagegaan",rol:"vk"},
+    {id:"d2",text:"Beskikbaar op Google Classroom Meeting",rol:"vk"},
+    {id:"d3",text:"Afwesighede aangemeld",rol:"vk"}
+  ],
+  na1:[
+    {id:"n1",text:"Invigilator App flags nagegaan (24 uur)",rol:"vk"},
+    {id:"n2",text:"Flags op kontrole sheet aangemeld",rol:"vk"},
+    {id:"n3",text:"Vraestelle begin merk",rol:"vk"},
+    {id:"n4",text:"Konsessie leerders nagegaan",rol:"vk"},
+    {id:"n5",text:"Gemiste vraestelle",rol:"lb"}
+  ],
+  na:[
+    {id:"p1",text:"Alle vraestelle gemerk op Dugga",rol:"vk"},
+    {id:"p2",text:"Gemiste vraestelle gelock en gepubliseer",rol:"vk"},
+    {id:"p3",text:"Punt in Vorderingsoorsig oorgedra",rol:"vk"},
+    {id:"p4",text:"Memorandum beskikbaar gestel",rol:"vk"},
+    {id:"p5",text:"Post-moderering voltooi",rol:"ko"}
+  ]
+};
+const FASE_LABELS={voor:"Voor eksamen",dag:"Dag van eksamen",na1:"Dag ná eksamen",na:"Ná eksamen"};
+const ROL={vk:"Vakkundige",ko:"Koördineerder",lb:"Leerbestuurder"};
+const ROL_CLASS={vk:"rol-vk",ko:"rol-ko",lb:"rol-lb"};
+const ALL_IDS=Object.values(CHECKS).flat().map(i=>i.id);
+
+let currentGraad="Graad 10";
+let db={eksamens:[],bystand:[],flags:[],gebruikers:[],checks:{}};
+
+const DASHBOARD_WAG = "MOS2026!";
+
+// Wagwoord skerm
+function wagwoordKontroleer(){
+  const gestoor = sessionStorage.getItem("mosWag");
+  if(gestoor === DASHBOARD_WAG) return true;
+  return false;
+}
+
+function wagwoordTeken(){
+  document.body.innerHTML = `
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;font-family:'DM Sans',sans-serif">
+      <div style="background:#fff;border-radius:16px;padding:48px;width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+        <div style="font-size:48px;margin-bottom:16px">🔒</div>
+        <h1 style="font-size:22px;font-weight:700;color:#1e293b;margin:0 0 8px">November Eksamen</h1>
+        <p style="color:#64748b;font-size:14px;margin:0 0 32px">Graad 10 &amp; 11 — MOS Wêreldwyd</p>
+        <input id="wagInput" type="password" placeholder="Wagwoord..." 
+          style="width:100%;box-sizing:border-box;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:15px;margin-bottom:12px;outline:none"
+          onkeydown="if(event.key==='Enter')wagTeken()">
+        <button onclick="wagTeken()" 
+          style="width:100%;padding:12px;background:#f97316;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">
+          Toegang verkry
+        </button>
+        <p id="wagFout" style="color:#ef4444;font-size:13px;margin:12px 0 0;display:none">Verkeerde wagwoord. Probeer weer.</p>
+      </div>
+    </div>`;
+  setTimeout(()=>document.getElementById("wagInput").focus(),100);
+}
+
+function wagTeken(){
+  const w = document.getElementById("wagInput").value;
+  if(w === DASHBOARD_WAG){
+    sessionStorage.setItem("mosWag", DASHBOARD_WAG);
+    location.reload();
+  } else {
+    document.getElementById("wagFout").style.display="block";
+    document.getElementById("wagInput").value="";
+    document.getElementById("wagInput").focus();
+  }
+}
+/* ====================================================================
+   FIREBASE OPSTELLING — BELANGRIK
+   Hierdie stelsel gebruik 'n aparte, nuwe Firebase-projek (nie die
+   Junie Mini Eksamen se projek nie). Voordat die stelsel werk moet jy:
+   1. 'n Nuwe Firebase-projek skep by https://console.firebase.google.com
+   2. 'n Realtime Database byvoeg (kies 'n streek, bv. europe-west1)
+   3. Databasisreëls stel sodat slegs /data en /klaslyste paaie
+      gelees/geskryf kan word (soortgelyk aan die Junie-stelsel s'n)
+   4. Die URL hieronder vervang met jou eie databasis-URL, bv.:
+      "https://JOU-PROJEK-default-rtdb.europe-west1.firebasedatabase.app"
+   ==================================================================== */
+const FIREBASE_URL = "https://VERVANG-MET-JOU-FIREBASE-URL-default-rtdb.europe-west1.firebasedatabase.app";
+
+let _syncTimer = null;
+let _luisterAktief = false;
+let _laasStoor = 0;
+
+function sk(k){return"eksstelselg1011nov_"+k;}
+
+function toonSyncStatus(staat){
+  const el=document.getElementById("syncStatus");
+  if(!el)return;
+  const ikone={besig:"⟳",ok:"●",fout:"!",laai:"⟳"};
+  const kleure={besig:"#94a3b8",ok:"#22c55e",fout:"#ef4444",laai:"#94a3b8"};
+  const tekste={besig:"Stoor...",ok:"Gestoor",fout:"Verbinding fout",laai:"Laai..."};
+  el.style.color=kleure[staat];
+  el.textContent=ikone[staat]+" "+tekste[staat];
+}
+
+// Stoor ALLES na Firebase — klaslyste ook
+async function stoorNaFirebase(){
+  toonSyncStatus("besig");
+  const dbKlein={
+    eksamens:db.eksamens,
+    bystand:db.bystand,
+    flags:db.flags,
+    checks:db.checks,
+    afwesig:db.afwesig,
+    gemis:db.gemis,
+    konsessies:db.konsessies,
+    reelings:db.reelings||[],
+    seeded:db.seeded||false
+  };
+  // Stoor aktiewe data
+  try{
+    const r=await fetch(FIREBASE_URL+"/data.json",{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(dbKlein)
+    });
+    _laasStoor=Date.now();
+    toonSyncStatus(r.ok?"ok":"fout");
+  }catch(e){toonSyncStatus("fout");}
+  // Stoor klaslyste apart — slegs as dit verander het
+  if(db.klaslystePerVraestel&&Object.keys(db.klaslystePerVraestel).length>0){
+    try{
+      await fetch(FIREBASE_URL+"/klaslyste.json",{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(db.klaslystePerVraestel)
+      });
+    }catch(e){}
+  }
+}
+
+// Laai data van Firebase — klaslyste een keer per sessie
+let klaslysteGelaaiBefore = false;
+async function laaiVanFirebase(){
+  toonSyncStatus("laai");
+  try{
+    // Laai aktiewe data
+    const r=await fetch(FIREBASE_URL+"/data.json");
+    const data=await r.json();
+    if(data){
+      db=data;
+      db.klaslystePerVraestel=db.klaslystePerVraestel||{};
+    }
+    // Laai klaslyste slegs eerste keer
+    if(!klaslysteGelaaiBefore){
+      klaslysteGelaaiBefore=true;
+      try{
+        const rk=await fetch(FIREBASE_URL+"/klaslyste.json");
+        const klaslyste=await rk.json();
+        if(klaslyste)db.klaslystePerVraestel=klaslyste;
+      }catch(e){}
+    }
+    try{localStorage.setItem(sk("db"),JSON.stringify(db));}catch(e){}
+    initDB();renderAll();
+    toonSyncStatus("ok");
+    beginLuister();
+  }catch(e){
+    toonSyncStatus("fout");
+    setTimeout(laaiVanFirebase,5000);
+  }
+}
+
+// Luister vir veranderinge van ander gebruikers
+function beginLuister(){
+  if(_luisterAktief)return;
+  _luisterAktief=true;
+  const es=new EventSource(FIREBASE_URL+"/data.json");
+  es.addEventListener("put",(e)=>{
+    try{
+      const pkg=JSON.parse(e.data);
+      const nuutData=pkg.data;
+      if(!nuutData)return;
+      if(Date.now()-_laasStoor<3000)return;
+      if(_syncTimer)return;
+      // Behou huidige klaslyste
+      nuutData.klaslystePerVraestel=db.klaslystePerVraestel||{};
+      db=nuutData;
+      try{localStorage.setItem(sk("db"),JSON.stringify(db));}catch(e){}
+      initDB();renderAll();toonSyncStatus("ok");
+    }catch(err){}
+  });
+  es.onerror=()=>{
+    _luisterAktief=false;
+    es.close();
+    setTimeout(beginLuister,5000);
+  };
+}
+
+function save(){
+  try{localStorage.setItem(sk("db"),JSON.stringify(db));}catch(e){}
+  clearTimeout(_syncTimer);
+  _syncTimer=setTimeout(async()=>{
+    await stoorNaFirebase();
+    _syncTimer=null;
+  },800);
+}
+
+function load(){
+  try{const d=localStorage.getItem(sk("db"));if(d)db=JSON.parse(d);}catch(e){}
+  initDB();
+}
+
+// Rooster vir die November-eksamen — leeg by verstek; KO voeg vakke by. Word net EEN keer
+// gebruik om die stelsel te saai (kyk db.seeded hieronder). Datum-formaat verkeerd?
+// Wysig gerus die datum/tyd/tydsduur velde hier direk.
+const DEFAULT_EKSAMENS=[
+  {vak:"RTT Prakties",datum:"2026-11-03",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-10-28",graad:"Graad 10"},
+  {vak:"Lewenswetenskappe Vr 1",datum:"2026-11-05",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-10-28",graad:"Graad 10"},
+  {vak:"Afrikaans HT",datum:"2026-11-06",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-10-28",graad:"Graad 10"},
+  {vak:"Wiskunde Vr 1",datum:"2026-11-09",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"Wiskundige Geletterdheid Vr 1",datum:"2026-11-09",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"English FAL",datum:"2026-11-10",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"Lewenswetenskappe Vr 2",datum:"2026-11-11",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"Lewensoriëntering",datum:"2026-11-12",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"Geografie Teorie",datum:"2026-11-13",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 10"},
+  {vak:"Wiskunde Vr 2",datum:"2026-11-16",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"Wiskundige Geletterdheid Vr 2",datum:"2026-11-16",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"RTT Teorie",datum:"2026-11-17",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"Besigheidstudies",datum:"2026-11-18",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"Fisiese Wetenskappe Vr 1",datum:"2026-11-19",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"Toerisme",datum:"2026-11-20",tyd:"08:00",tydsduur:"2½ ure",sperdatum:"2026-11-11",graad:"Graad 10"},
+  {vak:"Rekeningkunde",datum:"2026-11-23",tyd:"08:00",tydsduur:"2½ ure",sperdatum:"2026-11-18",graad:"Graad 10"},
+  {vak:"IGO",datum:"2026-11-24",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-18",graad:"Graad 10"},
+  {vak:"Fisiese Wetenskappe Vr 2",datum:"2026-11-25",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-18",graad:"Graad 10"},
+  {vak:"Geografie Prakties",datum:"2026-11-26",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-18",graad:"Graad 10"},
+  {vak:"RTT Prakties",datum:"2026-11-02",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-10-28",graad:"Graad 11"},
+  {vak:"English FAL",datum:"2026-11-03",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-10-28",graad:"Graad 11"},
+  {vak:"Afrikaans HT",datum:"2026-11-05",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-10-28",graad:"Graad 11"},
+  {vak:"Fisiese Wetenskappe Vr 1",datum:"2026-11-06",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-10-28",graad:"Graad 11"},
+  {vak:"Wiskunde Vr 1",datum:"2026-11-09",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"Wiskundige Geletterdheid Vr 1",datum:"2026-11-09",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"Geografie Teorie",datum:"2026-11-10",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"Rekeningkunde Vraestel 1",datum:"2026-11-11",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"IGO",datum:"2026-11-12",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"Fisiese Wetenskappe Vr 2",datum:"2026-11-13",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-04",graad:"Graad 11"},
+  {vak:"Wiskunde Vr 2",datum:"2026-11-16",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"Wiskundige Geletterdheid Vr 2",datum:"2026-11-16",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"Toerisme",datum:"2026-11-17",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"Lewensoriëntering",datum:"2026-11-18",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"Lewenswetenskappe Vr 1",datum:"2026-11-19",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"Geografie Prakties",datum:"2026-11-20",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-11",graad:"Graad 11"},
+  {vak:"RTT Teorie",datum:"2026-11-23",tyd:"08:00",tydsduur:"3 ure",sperdatum:"2026-11-18",graad:"Graad 11"},
+  {vak:"Besigheidstudies",datum:"2026-11-24",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-18",graad:"Graad 11"},
+  {vak:"Lewenswetenskappe Vr 2",datum:"2026-11-25",tyd:"08:00",tydsduur:"1½ ure",sperdatum:"2026-11-18",graad:"Graad 11"},
+  {vak:"Rekeningkunde Vraestel 2",datum:"2026-11-26",tyd:"08:00",tydsduur:"2 ure",sperdatum:"2026-11-18",graad:"Graad 11"}
+];
+
+
+function initDB(){
+  if(!db.gebruikers)db.gebruikers=[];
+  if(!db.eksamens)db.eksamens=[];
+  if(!db.bystand)db.bystand=[];
+  if(!db.flags)db.flags=[];
+  if(!db.checks)db.checks={};
+  if(!db.afwesig)db.afwesig=[];
+  if(!db.gemis)db.gemis=[];
+  if(!db.konsessies)db.konsessies=[];
+  if(!db.reelings)db.reelings=[];
+  if(!db.klaslystePerVraestel)db.klaslystePerVraestel={};
+  if(!db.seeded){
+    db.eksamens=DEFAULT_EKSAMENS.map((e,i)=>({id:"e2026nov_"+i,vak:e.vak,datum:e.datum,tyd:e.tyd,tydsduur:e.tydsduur,sperdatum:e.sperdatum||"",graad:e.graad||"Graad 10",status:"In opstelproses"}));
+    db.seeded=true;
+  }
+  db.eksamens.forEach(e=>{if(!db.checks[e.id]){db.checks[e.id]={};ALL_IDS.forEach(id=>{db.checks[e.id][id]=false;})}});
+}
+
+function fmt(d){if(!d)return"";try{return new Date(d+"T00:00:00").toLocaleDateString("af-ZA",{day:"2-digit",month:"short",year:"numeric"});}catch(e){return d;}}
+function initials(n){return n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();}
+
+function setGraad(g,el){
+  currentGraad=g;
+  document.querySelectorAll(".graad-tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+  const isG10=g==="Graad 10";
+  document.getElementById("topPill").className="graad-pill "+(isG10?"graad-pill-10":"graad-pill-11");
+  document.getElementById("topDot").style.background=isG10?"#3b82f6":"#f97316";
+  document.getElementById("topTeks").textContent=g;
+  document.getElementById("afwesigTitle").textContent="Afwesighede — "+g;
+  document.getElementById("roosterTitle").textContent="Eksamenrooster status — "+g;
+  document.getElementById("bystandTitle").textContent="Bystand & Meet — "+g;
+  document.getElementById("flagsTitle").textContent="Invigilator Flags — "+g;
+  document.getElementById("moderTitle").textContent="Vraestel Checklys — "+g;
+  roosterKOUnlocked=false;
+  roosterSluitKO();
+  bystandKOUnlocked=false;
+  if(document.getElementById("bystandKOSlot")){
+    document.getElementById("bystandKOSlot").style.display="flex";
+    document.getElementById("bystandKOOntsluit").style.display="none";
+  }
+  afwesigSluitKO();
+  registerState={};
+  document.getElementById("afwesigRegister").style.display="none";
+  renderAll();
+}
+
+function renderAll(){
+  renderStats();
+  renderRooster();
+  renderBystand();
+  renderFlags();
+  renderModeering();
+  if(!db.afwesig)db.afwesig=[];
+  if(!db.gemis)db.gemis=[];
+  updateAfwesigFilters();
+  renderAfwesigOorsig();
+  renderKlaslys();
+  renderGemisGroepe();
+}
+
+function getProgress(eid){
+  if(!db.checks[eid])return{done:0,total:ALL_IDS.length};
+  return{done:ALL_IDS.filter(id=>db.checks[eid][id]).length,total:ALL_IDS.length};
+}
+
+function statusClass(s){
+  if(s==="Gereed vir skedulering")return"status-gereed";
+  if(s==="Geskeduleer")return"status-geskeduleer";
+  if(s==="Onder nasien")return"status-nasien";
+  if(s==="Hangende herskryf")return"status-herskryf";
+  if(s==="Afgehandel")return"status-afgehandel";
+  return"status-opstel";
+}
+
+function renderStats(){
+  const eks=db.eksamens.filter(e=>e.graad===currentGraad);
+  const klaar=eks.filter(e=>e.status==="Afgehandel").length;
+  const herskryf=eks.filter(e=>e.status==="Hangende herskryf").length;
+  const flags=db.flags.filter(f=>f.graad===currentGraad).length;
+  document.getElementById("statsRow").innerHTML=`
+    <div class="stat-card"><div class="lbl">Eksamens</div><div class="val">${eks.length}</div><div class="sub">Totaal geskeduleer</div></div>
+    <div class="stat-card"><div class="lbl">Afgehandel</div><div class="val" style="color:var(--green)">${klaar}</div><div class="sub">Volledig klaar</div></div>
+    <div class="stat-card"><div class="lbl">Hangende herskryf</div><div class="val" style="color:var(--red)">${herskryf}</div><div class="sub">Wag op herskryf</div></div>
+    <div class="stat-card"><div class="lbl">Flags aangemeld</div><div class="val" style="color:var(--yellow)">${flags}</div><div class="sub">Invigilator flags</div></div>
+  `;
+}
+
+function renderRooster(){
+  const eks=db.eksamens.filter(e=>e.graad===currentGraad);
+  const tbody=document.getElementById("roosterBody");
+  const empty=document.getElementById("roosterEmpty");
+  tbody.innerHTML="";
+  if(!eks.length){empty.style.display="block";return;}
+  empty.style.display="none";
+  eks.forEach(e=>{
+    const p=getProgress(e.id);
+    const pct=Math.round((p.done/p.total)*100);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${fmt(e.datum)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px">${e.tyd||""}</td>
+      <td class="vak-bold">${e.vak}</td>
+      <td>${e.tydsduur}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;color:#64748b">${fmt(e.sperdatum)||"—"}</td>
+      <td><div class="prog-ring"><div class="prog-bar-sm"><div class="prog-fill-sm" style="width:${pct}%"></div></div><span>${pct}%</span></div></td>
+      <td><span class="status-badge ${statusClass(e.status)}">${e.status}</span></td>
+      <td><select onchange="updateStatus('${e.id}',this.value)" style="font-family:inherit;font-size:12px;padding:5px 8px;border-radius:var(--radius);border:1px solid var(--card-border);background:#fff;color:#1e293b;cursor:pointer;">
+        <option value="In opstelproses" ${e.status==="In opstelproses"?"selected":""}>In opstelproses</option>
+        <option value="Gereed vir skedulering" ${e.status==="Gereed vir skedulering"?"selected":""}>Gereed vir skedulering</option>
+        <option value="Geskeduleer" ${e.status==="Geskeduleer"?"selected":""}>Geskeduleer</option>
+        <option value="Onder nasien" ${e.status==="Onder nasien"?"selected":""}>Onder nasien</option>
+        <option value="Hangende herskryf" ${e.status==="Hangende herskryf"?"selected":""}>Hangende herskryf</option>
+        <option value="Afgehandel" ${e.status==="Afgehandel"?"selected":""}>Afgehandel</option>
+      </select></td>
+      <td>${roosterKOUnlocked?`<button onclick="editEksamen('${e.id}')" style="background:none;border:none;color:#64748b;cursor:pointer;padding:4px 6px;border-radius:var(--radius);font-size:15px;" title="Wysig"><i class="ti ti-edit" aria-hidden="true"></i></button><button onclick="delEksamen('${e.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;padding:4px 6px;border-radius:var(--radius);font-size:15px;" title="Verwyder"><i class="ti ti-trash" aria-hidden="true"></i></button>`:""}
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function delEksamen(id){
+  const e=db.eksamens.find(e=>e.id===id);
+  if(!e)return;
+  if(!confirm(e.vak+" verwyder? Dit kan nie ongedaan gemaak word nie."))return;
+  db.eksamens=db.eksamens.filter(e=>e.id!==id);
+  delete db.checks[id];
+  db.bystand=db.bystand.filter(b=>b.eid!==id);
+  save();renderAll();showToast("Vak verwyder");
+}
+
+function updateStatus(eid,s){
+  const e=db.eksamens.find(e=>e.id===eid);
+  if(e){e.status=s;save();renderRooster();renderStats();showToast("Status: "+s);}
+}
+
+function bystandEntry(eid,maak){
+  let b=db.bystand.find(x=>x.eid===eid);
+  if(!b&&maak){b={id:"b_"+eid,eid,persoon:"",tegnies:"",meet:"",aktief:false};db.bystand.push(b);}
+  return b;
+}
+
+function renderBystand(){
+  const lys=document.getElementById("bystandLys");
+  const eks=db.eksamens.filter(e=>e.graad===currentGraad).sort((a,b)=>((a.datum||"")+(a.tyd||"")).localeCompare((b.datum||"")+(b.tyd||""))||a.vak.localeCompare(b.vak));
+  if(!eks.length){lys.innerHTML='<div class="empty-state">Geen vraestelle op die rooster vir hierdie graad nie.</div>';return;}
+  lys.innerHTML=eks.map(e=>{
+    const b=bystandEntry(e.id,false)||{};
+    return `
+    <div class="bystand-row">
+      <span class="bystand-tyd">${fmt(e.datum)} &nbsp;${e.tyd||""}</span>
+      <span class="bystand-vak">${e.vak}</span>
+      <span class="bystand-persoon"><i class="ti ti-user" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>${b.persoon||"—"}</span>
+      <span class="bystand-tegnies"><i class="ti ti-tool" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>${b.tegnies||"—"}</span>
+      <div class="bystand-actions">
+        ${b.meet?`<a href="${b.meet}" target="_blank" class="meet-btn"><i class="ti ti-video" aria-hidden="true" style="font-size:13px"></i>Join Meet</a>`:`<span style="font-size:12px;color:#cbd5e1">Geen meet skakel</span>`}
+        <button onclick="toggleBevestig('${e.id}')" style="font-family:inherit;font-size:12px;padding:4px 12px;border-radius:99px;border:none;cursor:pointer;font-weight:500;${b.aktief?"background:#dcfce7;color:#166534":"background:#f1f5f9;color:#64748b"}">${b.aktief?"✓ Bevestig":"Bevestig"}</button>
+        ${bystandKOUnlocked?`<button class="icon-btn edit" onclick="editBystand('${e.id}')" title="Vul onderwyser en tegniese bystand in"><i class="ti ti-edit" aria-hidden="true"></i></button>`:""}
+      </div>
+    </div>`;}).join("");
+}
+
+function renderFlags(){
+  const tbody=document.getElementById("flagsBody");
+  const empty=document.getElementById("flagsEmpty");
+  const items=db.flags.filter(f=>f.graad===currentGraad);
+  if(!items.length){tbody.innerHTML="";empty.style.display="block";return;}
+  empty.style.display="none";
+  tbody.innerHTML=items.map(f=>`
+    <tr>
+      <td style="white-space:nowrap">${fmt(f.datum)}</td>
+      <td style="font-weight:500">${f.vak}</td>
+      <td>${f.leerder}</td>
+      <td><span class="flag-badge flag-tipe">${f.tipe||"—"}</span></td>
+      <td style="font-size:12px;color:#64748b;max-width:160px">${f.kommentaar||"—"}</td>
+      <td><span class="flag-badge ${f.status==="Afgehandel"?"flag-aangemeld":"flag-uitstaande"}">${f.status||"Hangende"}</span></td>
+      <td style="font-size:12px;color:#64748b;max-width:160px">${f.uitkoms||"—"}</td>
+      <td style="white-space:nowrap">
+        <button class="icon-btn edit" onclick="editFlag('${f.id}')" title="Wysig"><i class="ti ti-edit" aria-hidden="true"></i></button>
+        <button class="icon-btn del" onclick="delFlag('${f.id}')" title="Verwyder"><i class="ti ti-trash" aria-hidden="true"></i></button>
+      </td>
+    </tr>`).join("");
+}
+
+function renderModeering(){
+  const eks=db.eksamens.filter(e=>e.graad===currentGraad);
+  const grid=document.getElementById("moderChecklist");
+  grid.innerHTML="";
+  if(!eks.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Geen eksamens vir hierdie graad nie.</div>';return;}
+  eks.forEach(e=>{
+    const panel=document.createElement("div");
+    panel.className="check-panel";
+    let html=`<div class="check-panel-head"><h3>${e.vak}</h3></div>`;
+    Object.entries(CHECKS).forEach(([fk,items])=>{
+      html+=`<div class="fase-lbl">${FASE_LABELS[fk]}</div>`;
+      items.forEach(item=>{
+        const checked=db.checks[e.id]&&db.checks[e.id][item.id];
+        html+=`<div class="check-item" onclick="toggleCheck('${e.id}','${item.id}',this)">
+          <input type="checkbox" ${checked?"checked":""} onclick="event.stopPropagation();toggleCheck('${e.id}','${item.id}',this.closest('.check-item'))">
+          <span class="check-item-text${checked?" done":""}">${item.text}</span>
+          <span class="rol-tag ${ROL_CLASS[item.rol]}">${ROL[item.rol]}</span>
+        </div>`;
+      });
+    });
+    panel.innerHTML=html;
+    grid.appendChild(panel);
+  });
+}
+
+function toggleCheck(eid,iid,el){
+  if(!db.checks[eid])db.checks[eid]={};
+  db.checks[eid][iid]=!db.checks[eid][iid];
+  const cb=el.querySelector("input[type=checkbox]");
+  const txt=el.querySelector(".check-item-text");
+  if(cb)cb.checked=db.checks[eid][iid];
+  if(txt)txt.classList.toggle("done",db.checks[eid][iid]);
+  const p=getProgress(eid);
+  if(p.done===p.total){const e=db.eksamens.find(e=>e.id===eid);if(e&&e.status!=="Afgehandel")e.status="Afgehandel";}
+  save();renderRooster();renderStats();
+  showToast(db.checks[eid][iid]?"Taak gemerk ✓":"Taak ongemerk");
+}
+
+function renderGebruikers(){
+  document.getElementById("gebruikerLys").innerHTML=db.gebruikers.map(g=>`
+    <div class="admin-item">
+      <div class="user-avatar" style="background:var(--navy);width:36px;height:36px;font-size:12px">${initials(g.naam)}</div>
+      <div class="admin-item-info"><strong>${g.naam}</strong><span>${g.epos} · ${g.rol} · ${g.graad}</span></div>
+      <button class="del-btn" onclick="delGebruiker('${g.id}')"><i class="ti ti-trash" aria-hidden="true"></i></button>
+    </div>`).join("");
+}
+
+let registerState={};
+let afwesigKORol=false;
+
+function afwesigOntsluitKO(){
+  const w=document.getElementById("afwesigWagKO").value;
+  if(w!==KO_WAG){document.getElementById("afwesigWagFout").style.display="block";return;}
+  afwesigKORol=true;
+  document.getElementById("afwesigWagFout").style.display="none";
+  document.getElementById("afwesigWagKO").value="";
+  document.getElementById("afwesigRolToon").textContent="Koördineerder";
+  document.getElementById("afwesigRolToon").style.color="#7e22ce";
+  document.getElementById("afwesigSluitBtn").style.display="block";
+  document.getElementById("koKlaslysPanel").style.display="block";
+  renderKoKlaslysPanel();
+}
+
+function afwesigSluitKO(){
+  afwesigKORol=false;
+  document.getElementById("afwesigRolToon").textContent="Onderwyser";
+  document.getElementById("afwesigRolToon").style.color="#1e293b";
+  document.getElementById("afwesigSluitBtn").style.display="none";
+  document.getElementById("koKlaslysPanel").style.display="none";
+}
+
+let klaslysUitgebrei={};
+
+function toggleKlaslysUitgebrei(sleutel){
+  klaslysUitgebrei[sleutel]=!klaslysUitgebrei[sleutel];
+  renderKoKlaslysPanel();
+}
+
+function renderKoKlaslysPanel(){
+  if(!db.klaslystePerVraestel)db.klaslystePerVraestel={};
+  const eks=db.eksamens.filter(e=>e.graad===currentGraad);
+  const container=document.getElementById("koKlaslysLys");
+  if(!eks.length){container.innerHTML='<p style="font-size:13px;color:#94a3b8">Geen eksamens geskeduleer vir hierdie graad nie.</p>';return;}
+  container.innerHTML=eks.map((e,i)=>{
+    const sleutel=e.vak+"|"+currentGraad;
+    const lys=db.klaslystePerVraestel[sleutel]||[];
+    const uitgebrei=!!klaslysUitgebrei[sleutel];
+    const inputId="handmatigLeerder_"+i;
+    return`<div style="border-bottom:1px solid var(--card-border)">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+        <button onclick="toggleKlaslysUitgebrei('${sleutel}')" style="background:none;border:none;cursor:pointer;color:#94a3b8;padding:2px;font-size:14px" title="Wys/verberg leerders">
+          <i class="ti ti-chevron-${uitgebrei?"down":"right"}" aria-hidden="true"></i>
+        </button>
+        <span style="font-size:13px;font-weight:500;flex:1">${e.vak}</span>
+        ${lys.length?`<span style="font-size:12px;color:#166534;background:#f0fdf4;padding:2px 10px;border-radius:99px">${lys.length} leerders</span>`:`<span style="font-size:12px;color:#94a3b8">Geen klaslys</span>`}
+        <label style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border:1px solid var(--card-border);border-radius:var(--radius);background:#fff;color:#475569" title="Kies een of meer Gibbon-lêers (.xlsx of .csv) — hulle word by die lys gevoeg">
+          <i class="ti ti-upload" aria-hidden="true"></i>Laai op (meer as een)
+          <input type="file" accept=".csv,.xlsx,.xls" multiple style="display:none" onchange="laaiVraestelKlaslys(this,'${e.vak}')">
+        </label>
+        ${lys.length?`<button onclick="verwyderVraestelKlaslys('${e.vak}')" title="Verwyder hele klaslys" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px"><i class="ti ti-trash" aria-hidden="true"></i></button>`:""}
+      </div>
+      ${uitgebrei?`<div style="padding:0 0 14px 30px">
+        ${lys.length?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+          ${lys.map(n=>`<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;background:#f1f5f9;color:#374151;padding:3px 4px 3px 10px;border-radius:99px">${n}<button onclick="verwyderEenLeerderKlaslys('${sleutel}','${n.replace(/'/g,"\\'")}')" title="Verwyder ${n}" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:14px;line-height:1;padding:2px 4px">×</button></span>`).join("")}
+        </div>`:`<p style="font-size:12px;color:#94a3b8;margin-bottom:10px">Nog geen leerders in hierdie klaslys nie.</p>`}
+        <div style="display:flex;gap:6px;align-items:center;max-width:360px">
+          <input id="${inputId}" placeholder="Voeg leerder handmatig by (Voornaam Van)" style="flex:1;font-family:inherit;font-size:12px;padding:6px 10px;border:1px solid var(--card-border);border-radius:var(--radius)" onkeydown="if(event.key==='Enter'){voegEenLeerderBy('${sleutel}','${inputId}');}">
+          <button onclick="voegEenLeerderBy('${sleutel}','${inputId}')" style="background:var(--navy);color:#fff;border:none;padding:6px 14px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Voeg by</button>
+        </div>
+      </div>`:""}
+    </div>`;
+  }).join("");
+}
+
+function verwyderEenLeerderKlaslys(sleutel,naam){
+  if(!db.klaslystePerVraestel||!db.klaslystePerVraestel[sleutel])return;
+  if(!confirm(naam+" uit hierdie klaslys verwyder?"))return;
+  db.klaslystePerVraestel[sleutel]=db.klaslystePerVraestel[sleutel].filter(n=>n!==naam);
+  save();renderKoKlaslysPanel();toonKlaslysStatus();showToast(naam+" verwyder uit klaslys");
+}
+
+function voegEenLeerderBy(sleutel,inputId){
+  const el=document.getElementById(inputId);
+  if(!el)return;
+  const naam=el.value.trim();
+  if(!naam)return;
+  if(!db.klaslystePerVraestel)db.klaslystePerVraestel={};
+  if(!db.klaslystePerVraestel[sleutel])db.klaslystePerVraestel[sleutel]=[];
+  if(db.klaslystePerVraestel[sleutel].some(n=>n.toLowerCase()===naam.toLowerCase())){
+    showToast(naam+" is reeds in die klaslys");
+    el.value="";
+    return;
+  }
+  db.klaslystePerVraestel[sleutel].push(naam);
+  db.klaslystePerVraestel[sleutel].sort((a,b)=>a.localeCompare(b,"af"));
+  save();renderKoKlaslysPanel();toonKlaslysStatus();showToast(naam+" bygevoeg");
+}
+
+const NAAM_KOP=["naam","name","voornaam","first name","firstname","preferredname","preferred name","given name","voorname"];
+const VAN_KOP=["van","surname","last name","lastname","family name"];
+
+// Neem 'n reeks rye (array van arrays — eerste ry is dalk 'n kopreël) en gee
+// 'n skoon lys volle name terug. Herken outomaties "Naam"+"Van"-kolomme
+// (soos Gibbon dit uitvoer) en kombineer dit; anders gebruik dit die eerste
+// kolom soos voorheen (vir eenvoudige een-kolom CSV-lyste).
+function volleNaamUitRye(rows){
+  if(!rows||!rows.length)return[];
+  const kop=(rows[0]||[]).map(c=>String(c||"").trim().toLowerCase());
+  let naamI=-1,vanI=-1;
+  kop.forEach((c,i)=>{
+    if(vanI===-1&&VAN_KOP.includes(c))vanI=i;
+    else if(naamI===-1&&NAAM_KOP.includes(c))naamI=i;
+  });
+  const harKop=naamI>-1||vanI>-1;
+  const dataRye=harKop?rows.slice(1):rows;
+  const uit=[];
+  dataRye.forEach(r=>{
+    if(!r||!r.length)return;
+    let vol="";
+    if(harKop&&naamI>-1&&vanI>-1){
+      vol=`${String(r[naamI]||"").trim()} ${String(r[vanI]||"").trim()}`.trim();
+    } else if(harKop&&naamI>-1){
+      vol=String(r[naamI]||"").trim();
+    } else if(harKop&&vanI>-1){
+      vol=String(r[vanI]||"").trim();
+    } else {
+      vol=String(r[0]||"").trim().replace(/^"|"$/g,"");
+    }
+    if(vol&&vol.toLowerCase()!=="naam"&&vol.toLowerCase()!=="name"&&vol.length>1)uit.push(vol);
+  });
+  return uit;
+}
+
+// Oortjie-naam (soos in Google Sheets) → sleutelwoord(e) wat in die vak se
+// naam gesoek word om te bepaal watter eksamen(s) daardie klaslys kry.
+// 'n Oortjie kan by MEER as een eksamen pas (bv. "Wisk" pas by Wiskunde
+// Vraestel 1 ÉN Vraestel 2 — dieselfde klas kry dieselfde klaslys).
+const VAK_OORTJIE_SLEUTELWOORDE={
+  toer:["toerisme"],
+  fw:["fisiese wetenskap"],
+  rek:["rekeningkunde"],
+  wisk:["wiskunde"],
+  wg:["geletterdheid"],
+  igo:["igo"],
+  eng:["english"],
+  afr:["afrikaans"],
+  bs:["besigheidstudies"],
+  lw:["lewenswetenskap"],
+  rtt:["rtt"],
+  lo:["lewensoriëntering","lewensorientering","lo gta"]
+};
+
+function laaiVolledigeKlaslysLeer(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(typeof XLSX==="undefined"){showToast("Kon nie die Excel-leser laai nie — probeer weer");return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    let wb;
+    try{wb=XLSX.read(e.target.result,{type:"array"});}
+    catch(err){showToast("Kon die lêer nie lees nie — is dit 'n geldige .xlsx?");return;}
+    if(!db.klaslystePerVraestel)db.klaslystePerVraestel={};
+    const eks=db.eksamens.filter(x=>x.graad===currentGraad);
+    const herken=[],nieHerken=[];
+    wb.SheetNames.forEach(naamOortjie=>{
+      const sleutel=naamOortjie.trim().toLowerCase();
+      const woorde=VAK_OORTJIE_SLEUTELWOORDE[sleutel]||[sleutel];
+      const passendeEks=eks.filter(x=>woorde.some(w=>x.vak.toLowerCase().includes(w)));
+      if(!passendeEks.length){nieHerken.push(naamOortjie);return;}
+      const blad=wb.Sheets[naamOortjie];
+      const rows=XLSX.utils.sheet_to_json(blad,{header:1,blankrows:false});
+      const gevind=volleNaamUitRye(rows);
+      if(!gevind.length){nieHerken.push(naamOortjie+" (leeg)");return;}
+      passendeEks.forEach(x=>{
+        const sk=x.vak+"|"+currentGraad;
+        const bestaande=db.klaslystePerVraestel[sk]||[];
+        gevind.forEach(n=>{if(!bestaande.some(y=>y.toLowerCase()===n.toLowerCase()))bestaande.push(n);});
+        bestaande.sort((a,b)=>a.localeCompare(b,"af"));
+        db.klaslystePerVraestel[sk]=bestaande;
+      });
+      herken.push(`${naamOortjie} → ${passendeEks.map(x=>x.vak).join(", ")} (${gevind.length})`);
+    });
+    save();renderKoKlaslysPanel();toonKlaslysStatus();
+    const boodskap=nieHerken.length
+      ?`${herken.length} oortjie(s) verwerk. Nie herken nie: ${nieHerken.join(", ")}`
+      :`${herken.length} oortjie(s) suksesvol verwerk`;
+    showToast(boodskap);
+  };
+  reader.readAsArrayBuffer(file);
+  input.value="";
+}
+
+function laaiVraestelKlaslys(input,vak){
+  const files=Array.from(input.files||[]);
+  if(!files.length)return;
+  if(typeof XLSX==="undefined"){showToast("Kon nie die Excel-leser laai nie — probeer weer of gebruik CSV");return;}
+  const sleutel=vak+"|"+currentGraad;
+  if(!db.klaslystePerVraestel)db.klaslystePerVraestel={};
+  const bestaande=db.klaslystePerVraestel[sleutel]||[];
+  const totaal=[...bestaande];
+  let verwerk=0,foute=0;
+  files.forEach(file=>{
+    const ext=file.name.split(".").pop().toLowerCase();
+    const reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        let rows;
+        if(ext==="csv"){
+          rows=e.target.result.split(/\r?\n/).filter(l=>l.trim().length).map(l=>l.split(","));
+        } else {
+          const wb=XLSX.read(e.target.result,{type:"array"});
+          const blad=wb.Sheets[wb.SheetNames[0]];
+          rows=XLSX.utils.sheet_to_json(blad,{header:1,blankrows:false});
+        }
+        volleNaamUitRye(rows).forEach(n=>{
+          if(!totaal.some(x=>x.toLowerCase()===n.toLowerCase()))totaal.push(n);
+        });
+      }catch(err){foute++;}
+      verwerk++;
+      if(verwerk===files.length){
+        totaal.sort((a,b)=>a.localeCompare(b,"af"));
+        db.klaslystePerVraestel[sleutel]=totaal;
+        save();renderKoKlaslysPanel();toonKlaslysStatus();
+        const boodskap=foute?`${totaal.length} leerders in klaslys — ${foute} lêer(s) kon nie gelees word nie`:`${totaal.length} leerders in klaslys vir ${vak} (${files.length} lêer${files.length>1?"s":""} verwerk)`;
+        showToast(boodskap);
+      }
+    };
+    if(ext==="csv")reader.readAsText(file);
+    else reader.readAsArrayBuffer(file);
+  });
+  input.value="";
+}
+
+function verwyderVraestelKlaslys(vak){
+  if(!confirm("Klaslys vir "+vak+" verwyder?"))return;
+  if(db.klaslystePerVraestel)delete db.klaslystePerVraestel[vak+"|"+currentGraad];
+  save();renderKoKlaslysPanel();showToast("Klaslys verwyder");
+}
+
+function toonKlaslysStatus(){
+  const vak=document.getElementById("registerEksamen").value;
+  const status=document.getElementById("klaslysStatusToon");
+  if(!vak){status.textContent="";return;}
+  const lys=(db.klaslystePerVraestel&&db.klaslystePerVraestel[vak+"|"+currentGraad])||[];
+  status.innerHTML=lys.length?`<span style="color:#166534"><i class="ti ti-circle-check" style="vertical-align:-2px;margin-right:4px"></i>${lys.length} leerders in klaslys</span>`:`<span style="color:#ef4444"><i class="ti ti-alert-circle" style="vertical-align:-2px;margin-right:4px"></i>Geen klaslys vir hierdie vraestel nie. Vra die koördineerder om dit op te laai.</span>`;
+}
+
+function updateAfwesigFilters(){
+  const sel=document.getElementById("afwesigEksamFilter");
+  const regSel=document.getElementById("registerEksamen");
+  if(!db.afwesig)db.afwesig=[];
+  const gestoorVakke=new Set(db.afwesig.filter(a=>a.graad===currentGraad).map(a=>a.eksamen));
+  [sel,regSel].forEach(s=>{
+    const cur=s.value;
+    while(s.options.length>1)s.remove(1);
+    db.eksamens.filter(e=>e.graad===currentGraad).forEach(e=>{
+      if(s===regSel&&gestoorVakke.has(e.vak))return;
+      const o=document.createElement("option");
+      o.value=e.vak;o.textContent=`${e.vak} (${fmt(e.datum)})`;
+      s.appendChild(o);
+    });
+    s.value=cur;
+  });
+  if(regSel.value&&!Array.from(regSel.options).some(o=>o.value===regSel.value)){
+    regSel.value="";
+    document.getElementById("klaslysStatusToon").textContent="";
+  }
+}
+
+function oopRegister(){
+  const eksamen=document.getElementById("registerEksamen").value;
+  const datum=document.getElementById("registerDatum").value;
+  if(!eksamen){showToast("Kies eers 'n vraestel");return;}
+  const klaslys=(db.klaslystePerVraestel&&db.klaslystePerVraestel[eksamen+"|"+currentGraad])||[];
+  if(!klaslys.length){showToast("Geen klaslys vir hierdie vraestel nie");return;}
+  registerState={eksamen,datum,graad:currentGraad,leerders:{}};
+  klaslys.forEach(n=>{registerState.leerders[n]="ongemark";});
+  document.getElementById("registerTitel").textContent=eksamen+" — Register";
+  document.getElementById("afwesigRegister").style.display="block";
+  document.getElementById("registerSoek").value="";
+  renderRegister();
+  document.getElementById("afwesigRegister").scrollIntoView({behavior:"smooth"});
+}
+
+function renderRegister(){
+  const lys=document.getElementById("registerLys");
+  const soek=(document.getElementById("registerSoek").value||"").toLowerCase();
+  const klaslys=(db.klaslystePerVraestel&&db.klaslystePerVraestel[registerState.eksamen+"|"+registerState.graad])||[];
+  const gefilt=soek?klaslys.filter(n=>n.toLowerCase().includes(soek)):klaslys;
+  const gemerk=Object.values(registerState.leerders).filter(s=>s!=="ongemark").length;
+  const ongemark=klaslys.length-gemerk;
+  document.getElementById("telGemerk").textContent=gemerk;
+  document.getElementById("telOngemerk").textContent=ongemark;
+  document.getElementById("registerTelling").textContent=`${klaslys.length} leerders`;
+  const KOLOMME=3;
+  const perKolom=Math.ceil(gefilt.length/KOLOMME)||1;
+  const rigRy=(n,i)=>{
+    const s=registerState.leerders[n]||"ongemark";
+    const lbl=s==="aanwesig"?"Aanwesig":s==="afwesig"?"Afwesig":"Ongemerk";
+    const badgeKlas=s==="aanwesig"?"status-aanwesig":s==="afwesig"?"status-afwesig":"status-opstel";
+    return`<tr onclick="wisselStatus('${n.replace(/'/g,"\\'")}')" style="cursor:pointer">
+      <td style="color:#94a3b8;font-size:12px;width:28px">${i+1}</td>
+      <td style="font-weight:500;font-size:13.5px;padding-right:6px">${n}</td>
+      <td style="width:100px"><span class="status-badge ${badgeKlas}" style="font-size:11px">${lbl}</span></td>
+    </tr>`;
+  };
+  let html="";
+  for(let k=0;k<KOLOMME;k++){
+    const stuk=gefilt.slice(k*perKolom,(k+1)*perKolom);
+    if(!stuk.length)continue;
+    html+=`<table class="rooster-table" style="${k>0?"border-left:1px solid var(--card-border);":""}">
+      <tbody>${stuk.map((n,idx)=>rigRy(n,k*perKolom+idx)).join("")}</tbody>
+    </table>`;
+  }
+  lys.innerHTML=html||'<p style="font-size:13px;color:#94a3b8;grid-column:1/-1">Geen leerders pas by die soekterm nie.</p>';
+}
+
+function wisselStatus(naam){
+  const huidig=registerState.leerders[naam]||"ongemark";
+  registerState.leerders[naam]=huidig==="ongemark"?"aanwesig":huidig==="aanwesig"?"afwesig":"ongemark";
+  renderRegister();
+}
+
+function filterRegister(){renderRegister();}
+
+function stoorRegister(){
+  if(!db.afwesig)db.afwesig=[];
+  if(!db.gemis)db.gemis=[];
+  const {eksamen,datum,leerders,graad}=registerState;
+  db.afwesig=db.afwesig.filter(a=>!(a.eksamen===eksamen&&a.datum===datum&&a.graad===graad));
+  db.gemis=db.gemis.filter(g=>!(g.vraestel===eksamen&&g.datum===datum&&g.graad===graad));
+  Object.entries(leerders).forEach(([naam,status])=>{
+    if(status!=="ongemark"){
+      const id="a"+Date.now()+Math.random();
+      db.afwesig.push({id,leerder:naam,eksamen,datum,status:status==="aanwesig"?"Aanwesig":"Afwesig",graad});
+      if(status==="afwesig"){
+        db.gemis.push({id:"g"+Date.now()+Math.random(),leerder:naam,vraestel:eksamen,datum,rede:"",herskryf:"2026-11-27",status:"Uitstaande",geskeduleer:false,graad,nota:""});
+      }
+    }
+  });
+  save();renderAfwesigOorsig();renderGemisGroepe();updateAfwesigFilters();
+  sluitRegister();
+  showToast("Register gestoor — afwesiges verskyn in Gemiste Vraestelle");
+}
+
+function sluitRegister(){
+  document.getElementById("afwesigRegister").style.display="none";
+  registerState={};
+}
+
+let afwesigLBRol=false;
+let oorsigFilter="all";
+
+function afwesigOntsluitLB(){
+  const w=document.getElementById("afwesigWagLB").value;
+  if(w!==LB_WAG){document.getElementById("afwesigLBFout").style.display="block";return;}
+  document.getElementById("afwesigLBFout").style.display="none";
+  document.getElementById("afwesigWagLB").value="";
+  afwesigLBRol=true;
+  document.getElementById("afwesigLBSluitBtn").style.display="inline-block";
+  document.getElementById("afwesigAksieTh").style.display="";
+  renderAfwesigOorsig();
+}
+
+function afwesigSluitLB(){
+  afwesigLBRol=false;
+  document.getElementById("afwesigLBSluitBtn").style.display="none";
+  document.getElementById("afwesigAksieTh").style.display="none";
+  renderAfwesigOorsig();
+}
+
+function openAddEnkelAfwesig(){
+  const sel=document.getElementById("eaVraestel");
+  while(sel.options.length>1)sel.remove(1);
+  db.eksamens.filter(e=>e.graad===currentGraad).forEach(e=>{
+    const o=document.createElement("option");
+    o.value=e.vak;o.textContent=`${e.vak} (${fmt(e.datum)})`;
+    sel.appendChild(o);
+  });
+  document.getElementById("eaLeerder").value="";
+  document.getElementById("eaDatum").value=new Date().toISOString().split("T")[0];
+  document.getElementById("eaStatus").value="Aanwesig";
+  document.getElementById("modalEnkelAfwesig").classList.add("open");
+}
+
+function saveEnkelAfwesig(){
+  const leerder=document.getElementById("eaLeerder").value.trim();
+  const vraestel=document.getElementById("eaVraestel").value;
+  if(!leerder||!vraestel)return;
+  if(!db.afwesig)db.afwesig=[];
+  db.afwesig.push({id:"a"+Date.now(),leerder,eksamen:vraestel,datum:document.getElementById("eaDatum").value,status:document.getElementById("eaStatus").value,rede:"",graad:currentGraad});
+  save();closeModal("modalEnkelAfwesig");renderAfwesigOorsig();showToast(leerder+" bygevoeg");
+}
+
+function setOorsigFilter(f,el){
+  oorsigFilter=f;
+  document.querySelectorAll(".oorsig-filter-btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+  renderAfwesigOorsig();
+}
+
+function renderAfwesigOorsig(){
+  if(!db.afwesig)db.afwesig=[];
+  const eksamFilter=document.getElementById("afwesigEksamFilter").value;
+  let items=db.afwesig.filter(a=>a.graad===currentGraad);
+  if(eksamFilter!=="all")items=items.filter(a=>a.eksamen===eksamFilter);
+  if(oorsigFilter==="aanwesig")items=items.filter(a=>a.status==="Aanwesig");
+  if(oorsigFilter==="afwesig")items=items.filter(a=>a.status==="Afwesig");
+  const tbody=document.getElementById("afwesigBody");
+  const empty=document.getElementById("afwesigEmpty");
+  tbody.innerHTML="";
+  if(!items.length){empty.style.display="block";return;}
+  empty.style.display="none";
+  items.forEach(a=>{
+    const inGemis=db.gemis&&db.gemis.some(g=>g.leerder===a.leerder&&g.vraestel===a.eksamen&&g.graad===a.graad);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td style="font-weight:500">${a.leerder}</td>
+      <td style="font-size:13px">${a.eksamen||"—"}</td>
+      <td style="font-size:13px;white-space:nowrap">${fmt(a.datum)}</td>
+      <td><span class="status-badge ${a.status==="Aanwesig"?"status-aanwesig":"status-afwesig"}">${a.status}</span></td>
+      <td style="font-size:13px;min-width:160px">${afwesigLBRol&&a.status==="Afwesig"?`
+        <textarea onchange="updateAfwesigRede('${a.id}',this.value)" rows="2" style="width:100%;font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical" placeholder="Tik rede in...">${a.rede||""}</textarea>`
+        :`<span style="color:${a.rede?"#374151":"#cbd5e1"}">${a.rede||"—"}</span>`}
+      </td>
+      <td style="display:${afwesigLBRol?"":"none"}">
+        ${a.status==="Afwesig"?`
+          <select onchange="aksieKies('${a.id}',this.value)" style="font-family:inherit;font-size:12px;padding:4px 8px;border-radius:var(--radius);border:1px solid var(--card-border);background:#fff;cursor:pointer;color:#1e293b">
+            <option value="">— Kies aksie —</option>
+            <option value="geen" ${!inGemis&&a.aksie==="geen"?"selected":""}>Geen</option>
+            <option value="gemis" ${inGemis?"selected":""}>Gemiste vraestelle</option>
+          </select>
+          ${inGemis?`<span style="font-size:11px;color:#166534;display:block;margin-top:3px"><i class="ti ti-circle-check" style="vertical-align:-1px"></i> Bygevoeg</span>`:""}
+        `:""}
+      </td>
+      <td>
+        <button class="icon-btn del" onclick="delAfwesig('${a.id}')" title="Verwyder leerder uit register"><i class="ti ti-trash" aria-hidden="true"></i></button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateAfwesigRede(id,rede){
+  const a=db.afwesig.find(a=>a.id===id);
+  if(!a)return;
+  a.rede=rede;save();showToast("Rede gestoor");
+}
+
+function aksieKies(id,aksie){
+  const a=db.afwesig.find(a=>a.id===id);
+  if(!a)return;
+  a.aksie=aksie;
+  if(aksie==="gemis"){
+    if(!db.gemis)db.gemis=[];
+    const bestaanReeds=db.gemis.some(g=>g.leerder===a.leerder&&g.vraestel===a.eksamen&&g.graad===a.graad);
+    if(!bestaanReeds){
+      db.gemis.push({
+        id:"g"+Date.now(),
+        leerder:a.leerder,
+        vraestel:a.eksamen,
+        datum:a.datum,
+        rede:a.rede||"",
+        herskryf:"2026-11-27",
+        nota:"",
+        status:"Uitstaande",
+        geskeduleer:false,
+        graad:a.graad
+      });
+      showToast(a.leerder+" bygevoeg by Gemiste Vraestelle");
+    } else {
+      showToast(a.leerder+" is reeds in Gemiste Vraestelle");
+    }
+  } else if(aksie==="geen"){
+    db.gemis=db.gemis?db.gemis.filter(g=>!(g.leerder===a.leerder&&g.vraestel===a.eksamen&&g.graad===a.graad)):[];
+    showToast(a.leerder+" verwyder uit Gemiste Vraestelle");
+  }
+  save();renderAfwesigOorsig();renderGemisGroepe();
+}
+
+function renderAfwesig(){renderAfwesigOorsig();}
+
+function delAfwesig(id){
+  if(!confirm("Inskrywing verwyder?"))return;
+  db.afwesig=db.afwesig.filter(a=>a.id!==id);
+  save();renderAfwesigOorsig();showToast("Verwyder");
+}
+
+function renderKlaslys(){renderKoKlaslysPanel();}
+function verwyderKlaslys(){}
+function laaiKlaslys(){}
+
+const KO_WAG="Koor01";
+let gemisRol="lees";
+
+function gemisOntsluit(rol){
+  const wag=document.getElementById(rol==="lb"?"gemisWagLB":"gemisWagKO").value;
+  const korrekt=(rol==="lb"&&wag===LB_WAG)||(rol==="ko"&&wag===KO_WAG);
+  if(!korrekt){document.getElementById("gemisWagFout").style.display="block";return;}
+  document.getElementById("gemisWagFout").style.display="none";
+  document.getElementById("gemisWagLB").value="";
+  document.getElementById("gemisWagKO").value="";
+  gemisRol=rol;
+  document.getElementById("gemisRolToon").textContent=rol==="lb"?"Leerbestuurder":"Koördineerder";
+  document.getElementById("gemisRolToon").style.color=rol==="lb"?"#166534":"#7e22ce";
+  document.getElementById("gemisSluitBtn").style.display="block";
+  renderGemisGroepe();
+}
+
+function gemisSluit(){
+  gemisRol="lees";
+  document.getElementById("gemisRolToon").textContent="Slegs lees";
+  document.getElementById("gemisRolToon").style.color="#1e293b";
+  document.getElementById("gemisSluitBtn").style.display="none";
+  renderGemisGroepe();
+}
+
+function updateGemisVraestelSelect(){
+  const sel=document.getElementById("gVraestel");
+  while(sel.options.length>1)sel.remove(1);
+  db.eksamens.filter(e=>e.graad===currentGraad).forEach(e=>{
+    const o=document.createElement("option");
+    o.value=e.vak;o.textContent=`${e.vak} (${fmt(e.datum)})`;
+    sel.appendChild(o);
+  });
+}
+
+function updateGemisLeerderLys(){
+  const dl=document.getElementById("gemisLeerderLys");
+  dl.innerHTML="";
+  const lys=(db.klaslyste&&db.klaslyste[currentGraad])||[];
+  lys.forEach(n=>{const o=document.createElement("option");o.value=n;dl.appendChild(o);});
+}
+
+const GEMIS_STD_DATUM="2026-11-27";
+function fmtLang(d){
+  if(!d)return "Geen datum";
+  const m=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Aug","Sep","Okt","Nov","Des"];
+  const p=d.split("-");if(p.length!==3)return d;
+  return parseInt(p[2],10)+" "+m[parseInt(p[1],10)-1]+" "+p[0];
+}
+function renderGemisGroepe(){
+  if(!db.gemis)db.gemis=[];
+  const container=document.getElementById("gemisGroepe");
+  const items=db.gemis.filter(g=>g.graad===currentGraad);
+  if(!items.length){
+    container.innerHTML='<div class="section-card"><div class="empty-state">Geen gemiste vraestelle nie. Afwesiges word outomaties hier ingevoeg sodra die aftekenregister gestoor word.</div></div>';
+    return;
+  }
+  const perDatum={};
+  items.forEach(g=>{
+    const d=g.herskryf||GEMIS_STD_DATUM;
+    if(!perDatum[d])perDatum[d]={};
+    if(!perDatum[d][g.vraestel])perDatum[d][g.vraestel]=[];
+    perDatum[d][g.vraestel].push(g);
+  });
+  container.innerHTML="";
+  const inpStyle='font-family:inherit;font-size:12px;padding:4px 8px;border-radius:var(--radius);border:1px solid var(--card-border)';
+  Object.keys(perDatum).sort().forEach(datum=>{
+    const vrae=perDatum[datum];
+    const totaal=Object.values(vrae).reduce((n,l)=>n+l.length,0);
+    const wrap=document.createElement("div");
+    wrap.style.cssText="margin-bottom:22px";
+    wrap.innerHTML=`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 8px;padding:8px 12px;background:#f3e8ff;border-radius:var(--radius);color:#7e22ce;font-weight:700">
+      <i class="ti ti-calendar-event" aria-hidden="true"></i>
+      <span>Herskryf: ${fmtLang(datum)}</span>
+      <span style="font-weight:500;font-size:12px">${Object.keys(vrae).length} vraestel${Object.keys(vrae).length>1?"le":""} · ${totaal} leerder${totaal>1?"s":""}</span>
+    </div>`;
+    const sorted=Object.entries(vrae).sort((x,y)=>{
+      const ex=db.eksamens.find(e=>e.vak===x[0]&&e.graad===currentGraad)||{};
+      const ey=db.eksamens.find(e=>e.vak===y[0]&&e.graad===currentGraad)||{};
+      return ((ex.datum||"9999")+(ex.tyd||"")).localeCompare((ey.datum||"9999")+(ey.tyd||""))||x[0].localeCompare(y[0]);
+    });
+    sorted.forEach(([vraestel,leerders])=>{
+      const eks=db.eksamens.find(e=>e.vak===vraestel&&e.graad===currentGraad);
+      const ids=leerders.map(l=>l.id).join(",");
+      const div=document.createElement("div");
+      div.className="gemis-groep";
+      let html=`<div class="gemis-groep-head">
+        <span class="gemis-groep-naam"><i class="ti ti-file-text" aria-hidden="true" style="margin-right:6px;vertical-align:-2px;color:#94a3b8"></i>${vraestel}</span>
+        ${eks?`<span class="gemis-groep-datum">Oorspronklik: ${fmt(eks.datum)}</span>`:""}
+        <span class="gemis-groep-tel">${leerders.length} leerder${leerders.length>1?"s":""}</span>
+        ${gemisRol==="lb"?`<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px">Skuif almal na: <input type="date" value="${datum}" onchange="updateGemisHerskryfGroep('${ids}',this.value)" style="${inpStyle}"></span>`:""}
+      </div>`;
+      leerders.forEach(g=>{
+        const statusKlas=g.status==="Geskryf"?"status-geskryf":g.status==="Afwesig op herskryfdatum"?"status-gemis-afwesig":g.geskeduleer?"status-geskeduleer-ko":"status-uitstaande";
+        const statusTeks=g.geskeduleer&&g.status==="Uitstaande"?"Geskeduleer":g.status;
+        const kom=g.kommentaar?`<span style="font-size:12px;color:#374151">${g.kommentaar}</span>`:`<span style="font-size:12px;color:#cbd5e1;font-style:italic">Geen kommentaar</span>`;
+        html+=`<div class="gemis-row">
+          <span class="gemis-leerder">${g.leerder}</span>
+          <span style="font-size:12px;color:#64748b;min-width:80px"><i class="ti ti-clock" aria-hidden="true" style="vertical-align:-1px;margin-right:3px"></i>${g.tyd||"—"}</span>
+          ${g.konsessie?`<span class="status-badge" style="background:#fef3c7;color:#92400e;font-size:11px">Konsessie</span>`:`<span style="font-size:12px;color:#cbd5e1">Geen konsessie</span>`}
+          <span class="status-badge ${statusKlas}">${statusTeks}</span>
+          ${gemisRol!=="lb"?kom:""}
+          <div class="gemis-actions">
+            ${gemisRol==="ko"?`<button class="ko-sked-btn${g.geskeduleer?" gesked":""}" onclick="toggleSkedule('${g.id}')">${g.geskeduleer?"✓ Geskeduleer":"Skeduleer"}</button>`:""}
+            ${gemisRol==="lb"?`
+              <input type="date" value="${g.herskryf||GEMIS_STD_DATUM}" onchange="updateGemisHerskryf('${g.id}',this.value)" style="${inpStyle}" title="Herskryfdatum">
+              <input type="time" value="${g.tyd||""}" onchange="updateGemisTyd('${g.id}',this.value)" style="${inpStyle};width:100px" title="Tyd van herskryf">
+              <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap">
+                <input type="checkbox" ${g.konsessie?"checked":""} onchange="updateGemisKonsessie('${g.id}',this.checked)" style="accent-color:var(--accent);width:14px;height:14px">
+                Konsessie
+              </label>
+              <select onchange="updateGemisStatus('${g.id}',this.value)" style="${inpStyle};background:#fff;cursor:pointer">
+                <option value="Uitstaande" ${g.status==="Uitstaande"?"selected":""}>Uitstaande</option>
+                <option value="Geskryf" ${g.status==="Geskryf"?"selected":""}>Geskryf</option>
+                <option value="Afwesig op herskryfdatum" ${g.status==="Afwesig op herskryfdatum"?"selected":""}>Afwesig op herskryfdatum</option>
+              </select>
+              <textarea onchange="updateGemisKommentaar('${g.id}',this.value)" rows="1" style="${inpStyle};width:180px;resize:vertical;min-height:32px" placeholder="Kommentaar...">${g.kommentaar||""}</textarea>
+              <button class="icon-btn del" onclick="delGemis('${g.id}')"><i class="ti ti-trash" aria-hidden="true"></i></button>
+            `:""}
+          </div>
+        </div>`;
+      });
+      div.innerHTML=html;
+      wrap.appendChild(div);
+    });
+    container.appendChild(wrap);
+  });
+}
+
+function updateGemisHerskryf(id,datum){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g||!datum)return;
+  g.herskryf=datum;save();renderGemisGroepe();showToast("Herskryfdatum: "+fmtLang(datum));
+}
+function updateGemisHerskryfGroep(ids,datum){
+  if(!datum)return;
+  const set=ids.split(",");
+  db.gemis.forEach(g=>{if(set.includes(g.id))g.herskryf=datum;});
+  save();renderGemisGroepe();showToast("Herskryfdatum vir "+set.length+" leerder(s): "+fmtLang(datum));
+}
+
+function updateGemisKommentaar(id,kommentaar){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g)return;
+  g.kommentaar=kommentaar;save();showToast("Kommentaar gestoor");
+}
+
+function updateGemisTyd(id,tyd){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g)return;
+  g.tyd=tyd;save();showToast("Tyd gestoor");
+}
+
+function updateGemisKonsessie(id,konsessie){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g)return;
+  g.konsessie=konsessie;save();renderGemisGroepe();showToast(konsessie?"Konsessie gemerk":"Konsessie verwyder");
+}
+
+function toggleSkedule(id){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g)return;
+  g.geskeduleer=!g.geskeduleer;
+  save();renderGemisGroepe();
+  showToast(g.geskeduleer?"Geskeduleer":"Skedulering verwyder");
+}
+
+function updateGemisStatus(id,status){
+  const g=db.gemis.find(g=>g.id===id);
+  if(!g)return;
+  g.status=status;
+  save();renderGemisGroepe();showToast("Status: "+status);
+}
+
+function delGemis(id){
+  if(!confirm("Inskrywing verwyder?"))return;
+  db.gemis=db.gemis.filter(g=>g.id!==id);
+  save();renderGemisGroepe();showToast("Verwyder");
+}
+
+let konsLBRol=false;
+
+function konsOntsluit(){
+  const w=document.getElementById("konsWagLB").value;
+  if(w!==LB_WAG){document.getElementById("konsWagFout").style.display="block";return;}
+  document.getElementById("konsWagFout").style.display="none";
+  document.getElementById("konsWagLB").value="";
+  konsLBRol=true;
+  document.getElementById("konsRolToon").textContent="Leerbestuurder";
+  document.getElementById("konsRolToon").style.color="#166534";
+  document.getElementById("konsSluitBtn").style.display="inline-block";
+  ["konsVoegByBtn","oorsesVoegByBtn","igoVoegByBtn","anderVoegByBtn"].forEach(id=>document.getElementById(id).style.display="inline-flex");
+  ["konsAksieTh","oorsesAksieTh","igoAksieTh","anderAksieTh"].forEach(id=>document.getElementById(id).style.display="");
+  renderKonsessies();renderReëlings();
+}
+
+function konsSluit(){
+  konsLBRol=false;
+  document.getElementById("konsRolToon").textContent="Slegs lees";
+  document.getElementById("konsRolToon").style.color="#1e293b";
+  document.getElementById("konsSluitBtn").style.display="none";
+  ["konsVoegByBtn","oorsesVoegByBtn","igoVoegByBtn","anderVoegByBtn"].forEach(id=>document.getElementById(id).style.display="none");
+  ["konsAksieTh","oorsesAksieTh","igoAksieTh","anderAksieTh"].forEach(id=>document.getElementById(id).style.display="none");
+  renderKonsessies();renderReëlings();
+}
+
+function renderKonsessies(){
+  if(!db.konsessies)db.konsessies=[];
+  const tbody=document.getElementById("konsBody");
+  const empty=document.getElementById("konsEmpty");
+  if(!db.konsessies.length){tbody.innerHTML="";empty.style.display="block";return;}
+  empty.style.display="none";
+  tbody.innerHTML="";
+  db.konsessies.forEach(k=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td style="font-weight:500">${k.naam}</td>
+      <td><span class="status-badge" style="background:#eff6ff;color:#1d4ed8">${k.graad}</span></td>
+      <td>${k.ekstraTyd>0?`<span class="status-badge" style="background:#fef3c7;color:#92400e">+${k.ekstraTyd} min/h</span>`:"<span style='color:#94a3b8;font-size:13px'>Geen</span>"}</td>
+      <td style="font-size:13px;color:#64748b">${k.nota||"—"}</td>
+      <td style="display:${konsLBRol?"":"none"}">
+        <button class="icon-btn edit" onclick="editKonsessie('${k.id}')"><i class="ti ti-edit" aria-hidden="true"></i></button>
+        <button class="icon-btn del" onclick="delKonsessie('${k.id}')"><i class="ti ti-trash" aria-hidden="true"></i></button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function openAddKonsessie(){
+  delete document.getElementById("konsSaveBtn").dataset.editId;
+  document.getElementById("modalKonsessie").querySelector(".modal-head h2").textContent="Konsessie byvoeg";
+  document.getElementById("kNaam").value="";
+  document.getElementById("kGraad").value=currentGraad;
+  document.getElementById("kEkstraTyd").value="30";
+  document.getElementById("kNota").value="";
+  document.getElementById("modalKonsessie").classList.add("open");
+}
+
+function editKonsessie(id){
+  const k=db.konsessies.find(k=>k.id===id);
+  if(!k)return;
+  document.getElementById("kNaam").value=k.naam||"";
+  document.getElementById("kGraad").value=k.graad||currentGraad;
+  document.getElementById("kEkstraTyd").value=k.ekstraTyd||"30";
+  document.getElementById("kNota").value=k.nota||"";
+  document.getElementById("konsSaveBtn").dataset.editId=id;
+  document.getElementById("modalKonsessie").querySelector(".modal-head h2").textContent="Wysig konsessie";
+  document.getElementById("modalKonsessie").classList.add("open");
+}
+
+function saveKonsessie(){
+  const naam=document.getElementById("kNaam").value.trim();
+  if(!naam)return;
+  if(!db.konsessies)db.konsessies=[];
+  const editId=document.getElementById("konsSaveBtn").dataset.editId;
+  const data={naam,graad:document.getElementById("kGraad").value,ekstraTyd:parseInt(document.getElementById("kEkstraTyd").value),nota:document.getElementById("kNota").value};
+  if(editId){
+    const k=db.konsessies.find(k=>k.id===editId);
+    if(k)Object.assign(k,data);
+    delete document.getElementById("konsSaveBtn").dataset.editId;
+  } else {
+    db.konsessies.push({id:"k"+Date.now(),...data});
+  }
+  save();closeModal("modalKonsessie");renderKonsessies();showToast(naam+" se konsessie gestoor");
+}
+
+function delKonsessie(id){
+  if(!confirm("Konsessie verwyder?"))return;
+  db.konsessies=db.konsessies.filter(k=>k.id!==id);
+  save();renderKonsessies();showToast("Verwyder");
+}
+
+let huidigeTipe="oorsees";
+
+function openAddReeling(tipe){
+  huidigeTipe=tipe;
+  const titels={oorsees:"Oorsese leerder byvoeg",igo:"IGO leerder byvoeg",ander:"Ander reëling byvoeg"};
+  document.getElementById("reelingTitel").textContent=titels[tipe];
+  document.getElementById("rEposGroep").style.display=tipe==="igo"?"block":"none";
+  document.getElementById("rReelingGroep").style.display=tipe==="ander"?"block":"none";
+  document.getElementById("rNaam").value="";
+  document.getElementById("rGraad").value=currentGraad;
+  document.getElementById("rEpos").value="";
+  document.getElementById("rReeling").value="";
+  document.getElementById("rNota").value="";
+  delete document.getElementById("reelingSaveBtn").dataset.editId;
+  document.getElementById("modalReeling").classList.add("open");
+}
+
+function saveReeling(){
+  const naam=document.getElementById("rNaam").value.trim();
+  if(!naam)return;
+  if(!db.reelings)db.reelings=[];
+  const editId=document.getElementById("reelingSaveBtn").dataset.editId;
+  const data={naam,graad:document.getElementById("rGraad").value,tipe:huidigeTipe,epos:document.getElementById("rEpos").value,reeling:document.getElementById("rReeling").value,nota:document.getElementById("rNota").value};
+  if(editId){
+    const r=db.reelings.find(r=>r.id===editId);
+    if(r)Object.assign(r,data);
+    delete document.getElementById("reelingSaveBtn").dataset.editId;
+  } else {
+    db.reelings.push({id:"r"+Date.now(),...data});
+  }
+  save();closeModal("modalReeling");renderReëlings();showToast(naam+" gestoor");
+}
+
+function delReeling(id){
+  if(!confirm("Verwyder?"))return;
+  db.reelings=db.reelings.filter(r=>r.id!==id);
+  save();renderReëlings();showToast("Verwyder");
+}
+
+function editReeling(id){
+  const r=db.reelings.find(r=>r.id===id);
+  if(!r)return;
+  huidigeTipe=r.tipe;
+  const titels={oorsees:"Wysig oorsese leerder",igo:"Wysig IGO leerder",ander:"Wysig reëling"};
+  document.getElementById("reelingTitel").textContent=titels[r.tipe]||"Wysig";
+  document.getElementById("rEposGroep").style.display=r.tipe==="igo"?"block":"none";
+  document.getElementById("rReelingGroep").style.display=r.tipe==="ander"?"block":"none";
+  document.getElementById("rNaam").value=r.naam||"";
+  document.getElementById("rGraad").value=r.graad||currentGraad;
+  document.getElementById("rEpos").value=r.epos||"";
+  document.getElementById("rReeling").value=r.reeling||"";
+  document.getElementById("rNota").value=r.nota||"";
+  document.getElementById("reelingSaveBtn").dataset.editId=id;
+  document.getElementById("modalReeling").classList.add("open");
+}
+
+function renderReëlings(){
+  if(!db.reelings)db.reelings=[];
+  const tipes={oorsees:{body:"oorsesBody",empty:"oorsesEmpty"},igo:{body:"igoBody",empty:"igoEmpty"},ander:{body:"anderBody",empty:"anderEmpty"}};
+  Object.entries(tipes).forEach(([tipe,els])=>{
+    const items=db.reelings.filter(r=>r.tipe===tipe);
+    const tbody=document.getElementById(els.body);
+    const empty=document.getElementById(els.empty);
+    tbody.innerHTML="";
+    if(!items.length){empty.style.display="block";return;}
+    empty.style.display="none";
+    items.forEach(r=>{
+      const tr=document.createElement("tr");
+      if(tipe==="igo"){
+        tr.innerHTML=`<td style="font-weight:500">${r.naam}</td><td><span class="status-badge" style="background:#eff6ff;color:#1d4ed8">${r.graad}</span></td><td style="font-size:13px">${r.epos||"—"}</td><td style="font-size:13px;color:#64748b">${r.nota||"—"}</td><td style="display:${konsLBRol?"":"none"}"><button class="icon-btn edit" onclick="editReeling('${r.id}')"><i class="ti ti-edit"></i></button><button class="icon-btn del" onclick="delReeling('${r.id}')"><i class="ti ti-trash"></i></button></td>`;
+      } else if(tipe==="ander"){
+        tr.innerHTML=`<td style="font-weight:500">${r.naam}</td><td><span class="status-badge" style="background:#eff6ff;color:#1d4ed8">${r.graad}</span></td><td style="font-size:13px">${r.reeling||"—"}</td><td style="font-size:13px;color:#64748b">${r.nota||"—"}</td><td style="display:${konsLBRol?"":"none"}"><button class="icon-btn edit" onclick="editReeling('${r.id}')"><i class="ti ti-edit"></i></button><button class="icon-btn del" onclick="delReeling('${r.id}')"><i class="ti ti-trash"></i></button></td>`;
+      } else {
+        tr.innerHTML=`<td style="font-weight:500">${r.naam}</td><td><span class="status-badge" style="background:#eff6ff;color:#1d4ed8">${r.graad}</span></td><td style="font-size:13px;color:#64748b">${r.nota||"—"}</td><td style="display:${konsLBRol?"":"none"}"><button class="icon-btn edit" onclick="editReeling('${r.id}')"><i class="ti ti-edit"></i></button><button class="icon-btn del" onclick="delReeling('${r.id}')"><i class="ti ti-trash"></i></button></td>`;
+      }
+      tbody.appendChild(tr);
+    });
+  });
+}
+function getKonsessie(naam,graad){
+  if(!db.konsessies)return null;
+  const soekNaam=naam.trim().toLowerCase();
+  let treffer=db.konsessies.find(k=>k.naam.trim().toLowerCase()===soekNaam);
+  if(treffer)return treffer;
+  const dele=soekNaam.split(" ");
+  if(dele.length>=2){
+    const omgekeer=dele.slice(1).join(" ")+" "+dele[0];
+    treffer=db.konsessies.find(k=>k.naam.trim().toLowerCase()===omgekeer);
+    if(treffer)return treffer;
+  }
+  treffer=db.konsessies.find(k=>{
+    const kNaam=k.naam.trim().toLowerCase();
+    return kNaam.includes(soekNaam)||soekNaam.includes(kNaam)||
+           dele.some(d=>d.length>2&&kNaam.includes(d));
+  });
+  return treffer||null;
+}
+
+function showPage(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  document.getElementById("page-"+id).classList.add("active");
+  el.classList.add("active");
+  if(id==="admin")renderGebruikers();
+  if(id==="afwesig"){updateAfwesigFilters();renderAfwesigOorsig();}
+  if(id==="gemis"){gemisSluit();renderGemisGroepe();}
+  if(id==="konsessies"){if(!db.konsessies)db.konsessies=[];if(!db.reelings)db.reelings=[];renderKonsessies();renderReëlings();}
+}
+
+let roosterKOUnlocked=false;
+
+function roosterOntsluitKO(){
+  const w=document.getElementById("roosterKOWag").value;
+  if(w!==KO_WAG){document.getElementById("roosterKOFout").style.display="block";return;}
+  document.getElementById("roosterKOFout").style.display="none";
+  document.getElementById("roosterKOWag").value="";
+  document.getElementById("roosterKOSlot").style.display="none";
+  document.getElementById("roosterKOOntsluit").style.display="flex";
+  roosterKOUnlocked=true;
+  renderRooster();
+}
+
+function roosterSluitKO(){
+  document.getElementById("roosterKOSlot").style.display="flex";
+  document.getElementById("roosterKOOntsluit").style.display="none";
+  document.getElementById("roosterKOWag").value="";
+  roosterKOUnlocked=false;
+  renderRooster();
+}
+
+function openAddEksamen(){
+  delete document.getElementById("eksamenSaveBtn").dataset.editId;
+  document.getElementById("modalEksamen").querySelector(".modal-head h2").textContent="Nuwe eksamen byvoeg";
+  document.getElementById("eVak").value="";
+  document.getElementById("eDatum").value="";
+  document.getElementById("eTyd").value="08:00";
+  document.getElementById("eSperdatum").value="";
+  document.getElementById("modalEksamen").classList.add("open");
+  document.getElementById("eGraad").value=currentGraad;
+}
+
+function editEksamen(id){
+  const e=db.eksamens.find(e=>e.id===id);
+  if(!e)return;
+  document.getElementById("modalEksamen").querySelector(".modal-head h2").textContent="Eksamen wysig";
+  document.getElementById("eVak").value=e.vak||"";
+  document.getElementById("eDatum").value=e.datum||"";
+  document.getElementById("eTyd").value=e.tyd||"08:00";
+  if(e.tydsduur)document.getElementById("eTydsduur").value=e.tydsduur;
+  document.getElementById("eSperdatum").value=e.sperdatum||"";
+  document.getElementById("eGraad").value=e.graad||currentGraad;
+  document.getElementById("eksamenSaveBtn").dataset.editId=id;
+  document.getElementById("modalEksamen").classList.add("open");
+}
+let bystandKOUnlocked=false;
+
+function bystandOntsluitKO(){
+  const w=document.getElementById("bystandKOWag").value;
+  if(w!==KO_WAG){document.getElementById("bystandKOFout").style.display="block";return;}
+  document.getElementById("bystandKOFout").style.display="none";
+  document.getElementById("bystandKOWag").value="";
+  document.getElementById("bystandKOSlot").style.display="none";
+  document.getElementById("bystandKOOntsluit").style.display="flex";
+  bystandKOUnlocked=true;
+  renderBystand();
+}
+
+function bystandSluitKO(){
+  document.getElementById("bystandKOSlot").style.display="flex";
+  document.getElementById("bystandKOOntsluit").style.display="none";
+  document.getElementById("bystandKOWag").value="";
+  bystandKOUnlocked=false;
+  renderBystand();
+}
+
+function toggleBevestig(eid){
+  const b=bystandEntry(eid,true);
+  b.aktief=!b.aktief;
+  save();renderBystand();
+  showToast(b.aktief?"Bevestig ✓":"Bevestiging verwyder");
+}
+
+const LB_WAG="Leer01";
+
+function checkLbWag(){
+  const w=document.getElementById("lbWag").value;
+  if(w===LB_WAG){
+    document.getElementById("lbWagwoord").style.display="none";
+    document.getElementById("lbSeksie").style.display="block";
+    document.getElementById("lbFout").style.display="none";
+  } else {
+    document.getElementById("lbFout").style.display="block";
+    document.getElementById("lbWag").value="";
+  }
+}
+
+function resetLbSeksie(){
+  document.getElementById("lbSeksie").style.display="none";
+  document.getElementById("lbWagwoord").style.display="block";
+  document.getElementById("lbWag").value="";
+  document.getElementById("lbFout").style.display="none";
+  document.getElementById("fStatus").value="Hangende";
+  document.getElementById("fUitkoms").value="";
+}
+
+function openAddFlag(){
+  delete document.getElementById("flagSaveBtn").dataset.editId;
+  document.getElementById("modalFlag").querySelector(".modal-head h2").textContent="Flag aanmeld";
+  document.getElementById("fVak").value="";
+  document.getElementById("fLeerder").value="";
+  document.getElementById("fTipe").value="";
+  document.getElementById("fKommentaar").value="";
+  document.getElementById("fDatum").value=new Date().toISOString().split("T")[0];
+  resetLbSeksie();
+  document.getElementById("modalFlag").classList.add("open");
+}
+function closeModal(id){document.getElementById(id).classList.remove("open");}
+
+function saveEksamen(){
+  const vak=document.getElementById("eVak").value.trim();
+  if(!vak)return;
+  const graad=document.getElementById("eGraad").value;
+  const editId=document.getElementById("eksamenSaveBtn").dataset.editId;
+  const velde={vak,datum:document.getElementById("eDatum").value,tyd:document.getElementById("eTyd").value,tydsduur:document.getElementById("eTydsduur").value,sperdatum:document.getElementById("eSperdatum").value,graad};
+  if(editId){
+    const e=db.eksamens.find(e=>e.id===editId);
+    if(e)Object.assign(e,velde);
+    delete document.getElementById("eksamenSaveBtn").dataset.editId;
+    save();closeModal("modalEksamen");renderAll();
+    showToast(vak+" opgedateer");
+  } else {
+    const id="e"+Date.now();
+    db.eksamens.push({id,...velde,status:"In opstelproses"});
+    db.checks[id]={};ALL_IDS.forEach(iid=>{db.checks[id][iid]=false;});
+    save();closeModal("modalEksamen");renderAll();
+    showToast(vak+" bygevoeg");
+  }
+  document.getElementById("eVak").value="";
+}
+
+function saveBystand(){
+  const eid=document.getElementById("bystandSaveBtn").dataset.editId;
+  if(!eid||!bystandKOUnlocked)return;
+  const b=bystandEntry(eid,true);
+  b.persoon=document.getElementById("bPersoon").value.trim();
+  b.tegnies=document.getElementById("bTegnies").value.trim();
+  b.meet=document.getElementById("bMeet").value.trim();
+  save();closeModal("modalBystand");renderBystand();showToast("Bystand gestoor");
+}
+
+function editBystand(eid){
+  if(!bystandKOUnlocked)return;
+  const e=db.eksamens.find(x=>x.id===eid);
+  if(!e)return;
+  const b=bystandEntry(eid,false)||{};
+  document.getElementById("bInfo").textContent=e.vak+" — "+fmt(e.datum)+" "+(e.tyd||"");
+  document.getElementById("bPersoon").value=b.persoon||"";
+  document.getElementById("bTegnies").value=b.tegnies||"";
+  document.getElementById("bMeet").value=b.meet||"";
+  document.getElementById("bystandSaveBtn").dataset.editId=eid;
+  document.getElementById("modalBystand").classList.add("open");
+}
+
+function saveFlag(){
+  const vak=document.getElementById("fVak").value.trim();
+  const tipe=document.getElementById("fTipe").value;
+  if(!vak||!tipe)return;
+  const editId=document.getElementById("flagSaveBtn").dataset.editId;
+  const lbOntsluit=document.getElementById("lbSeksie").style.display!=="none";
+  const data={
+    vak,
+    leerder:document.getElementById("fLeerder").value,
+    tipe,
+    kommentaar:document.getElementById("fKommentaar").value,
+    datum:document.getElementById("fDatum").value,
+    status:lbOntsluit?document.getElementById("fStatus").value:"Hangende",
+    uitkoms:lbOntsluit?document.getElementById("fUitkoms").value:"",
+    graad:currentGraad
+  };
+  if(editId){
+    const f=db.flags.find(f=>f.id===editId);
+    if(f)Object.assign(f,data);
+    delete document.getElementById("flagSaveBtn").dataset.editId;
+    document.getElementById("modalFlag").querySelector(".modal-head h2").textContent="Flag aanmeld";
+  } else {
+    db.flags.push({id:"f"+Date.now(),...data});
+  }
+  save();closeModal("modalFlag");renderFlags();renderStats();showToast("Flag gestoor");
+}
+
+function editFlag(id){
+  const f=db.flags.find(f=>f.id===id);
+  if(!f)return;
+  document.getElementById("fVak").value=f.vak||"";
+  document.getElementById("fLeerder").value=f.leerder||"";
+  document.getElementById("fTipe").value=f.tipe||"";
+  document.getElementById("fKommentaar").value=f.kommentaar||"";
+  document.getElementById("fDatum").value=f.datum||"";
+  document.getElementById("flagSaveBtn").dataset.editId=id;
+  document.getElementById("modalFlag").querySelector(".modal-head h2").textContent="Wysig flag";
+  resetLbSeksie();
+  document.getElementById("fStatus").value=f.status||"Hangende";
+  document.getElementById("fUitkoms").value=f.uitkoms||"";
+  document.getElementById("modalFlag").classList.add("open");
+}
+
+function delFlag(id){
+  if(!confirm("Flag verwyder?"))return;
+  db.flags=db.flags.filter(f=>f.id!==id);
+  save();renderFlags();renderStats();showToast("Flag verwyder");
+}
+
+function addGebruiker(){
+  const naam=document.getElementById("nuweNaam").value.trim();
+  if(!naam)return;
+  db.gebruikers.push({id:"u"+Date.now(),naam,epos:document.getElementById("nuweEpos").value,rol:document.getElementById("nuweRol").value,graad:document.getElementById("nuweGraad").value});
+  save();renderGebruikers();showToast(naam+" bygevoeg");
+  document.getElementById("nuweNaam").value="";document.getElementById("nuweEpos").value="";
+}
+
+function delGebruiker(id){db.gebruikers=db.gebruikers.filter(g=>g.id!==id);save();renderGebruikers();}
+
+let toastT;
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+document.querySelectorAll(".modal-bg").forEach(m=>m.addEventListener("click",function(e){if(e.target===this)this.classList.remove("open");}));
+
+load();
+if(!wagwoordKontroleer()){
+  wagwoordTeken();
+} else {
+  renderAll();
+  laaiVanFirebase();
+}
+</script>
+</body>
+</html>
