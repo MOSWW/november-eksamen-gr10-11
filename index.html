@@ -502,7 +502,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:#1e293b;min-he
           <thead><tr><th>Leerder</th><th>Graad</th><th>Ekstra tyd</th><th>Nota</th><th id="konsAksieTh" style="display:none"></th></tr></thead>
           <tbody id="konsBody"></tbody>
         </table>
-        <div class="empty-state" id="konsEmpty">Geen konsessies aangemeld nie.</div>
+        <div class="empty-state" id="konsEmpty">Geen konsessies aangemeld vir hierdie graad nie.</div>
       </div>
 
       <!-- Oorsese Leerders -->
@@ -1052,6 +1052,9 @@ function renderAll(){
   renderAfwesigOorsig();
   renderKlaslys();
   renderGemisGroepe();
+  if(!db.konsessies)db.konsessies=[];
+  if(!db.reelings)db.reelings=[];
+  renderKonsessies();renderReëlings();
 }
 
 function getProgress(eid){
@@ -1918,10 +1921,11 @@ function renderKonsessies(){
   if(!db.konsessies)db.konsessies=[];
   const tbody=document.getElementById("konsBody");
   const empty=document.getElementById("konsEmpty");
-  if(!db.konsessies.length){tbody.innerHTML="";empty.style.display="block";return;}
-  empty.style.display="none";
+  const kItems=db.konsessies.filter(k=>k.graad===currentGraad);
   tbody.innerHTML="";
-  db.konsessies.forEach(k=>{
+  if(!kItems.length){empty.style.display="block";return;}
+  empty.style.display="none";
+  kItems.forEach(k=>{
     const tr=document.createElement("tr");
     tr.innerHTML=`
       <td style="font-weight:500">${k.naam}</td>
@@ -2040,7 +2044,7 @@ function renderReëlings(){
   if(!db.reelings)db.reelings=[];
   const tipes={oorsees:{body:"oorsesBody",empty:"oorsesEmpty"},igo:{body:"igoBody",empty:"igoEmpty"},ander:{body:"anderBody",empty:"anderEmpty"}};
   Object.entries(tipes).forEach(([tipe,els])=>{
-    const items=db.reelings.filter(r=>r.tipe===tipe);
+    const items=db.reelings.filter(r=>r.tipe===tipe&&r.graad===currentGraad);
     const tbody=document.getElementById(els.body);
     const empty=document.getElementById(els.empty);
     tbody.innerHTML="";
