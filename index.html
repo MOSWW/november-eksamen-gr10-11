@@ -1655,7 +1655,8 @@ function renderAfwesigOorsig(){
           ${inGemis?`<span style="font-size:11px;color:#166534;display:block;margin-top:3px"><i class="ti ti-circle-check" style="vertical-align:-1px"></i> Bygevoeg</span>`:""}
         `:""}
       </td>
-      <td>
+      <td style="white-space:nowrap">
+        <button class="icon-btn edit" onclick="wisselAfwesigStatus('${a.id}')" title="${a.status==="Afwesig"?"Verander na Aanwesig":"Verander na Afwesig"}"><i class="ti ti-arrows-exchange" aria-hidden="true"></i></button>
         <button class="icon-btn del" onclick="delAfwesig('${a.id}')" title="Verwyder leerder uit register"><i class="ti ti-trash" aria-hidden="true"></i></button>
       </td>`;
     tbody.appendChild(tr);
@@ -1700,6 +1701,29 @@ function aksieKies(id,aksie){
 }
 
 function renderAfwesig(){renderAfwesigOorsig();}
+
+function wisselAfwesigStatus(id){
+  const a=db.afwesig.find(a=>a.id===id);
+  if(!a)return;
+  if(!db.gemis)db.gemis=[];
+  const pas=g=>g.leerder===a.leerder&&g.vraestel===a.eksamen&&g.graad===a.graad;
+  if(a.status==="Afwesig"){
+    const g=db.gemis.find(pas);
+    if(g&&(g.status!=="Uitstaande"||g.kommentaar||g.tyd||g.geskeduleer||g.konsessie)){
+      if(!confirm(a.leerder+" het reeds inligting by Gemiste Vraestelle (status/tyd/kommentaar). Verander na Aanwesig en verwyder daardie inskrywing?"))return;
+    } else if(!confirm(a.leerder+" verander na Aanwesig en verwyder uit Gemiste Vraestelle?"))return;
+    a.status="Aanwesig";a.aksie="";
+    db.gemis=db.gemis.filter(g=>!pas(g));
+    showToast(a.leerder+" is nou Aanwesig \u2014 verwyder uit Gemiste Vraestelle");
+  } else {
+    a.status="Afwesig";
+    if(!db.gemis.some(pas)){
+      db.gemis.push({id:"g"+Date.now()+Math.random(),leerder:a.leerder,vraestel:a.eksamen,datum:a.datum,rede:a.rede||"",herskryf:"2026-11-27",nota:"",status:"Uitstaande",geskeduleer:false,graad:a.graad});
+    }
+    showToast(a.leerder+" is nou Afwesig \u2014 bygevoeg by Gemiste Vraestelle");
+  }
+  save();renderAfwesigOorsig();renderGemisGroepe();
+}
 
 function delAfwesig(id){
   if(!confirm("Inskrywing verwyder?"))return;
