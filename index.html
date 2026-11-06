@@ -323,7 +323,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:#1e293b;min-he
       <div class="section-card">
         <div class="section-header">
           <span class="section-title" id="flagsTitle">Invigilator Flags — Graad 10</span>
-          <button class="add-btn" onclick="openAddFlag()"><i class="ti ti-plus" aria-hidden="true"></i>Meld flag aan</button>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div id="flagsLBSlot" style="display:flex;align-items:center;gap:6px">
+              <i class="ti ti-lock" aria-hidden="true" style="font-size:14px;color:#94a3b8"></i>
+              <input id="flagsLBWag" type="password" placeholder="Leerbestuurder-wagwoord" onkeydown="if(event.key==='Enter')flagsOntsluitLB()" style="font-family:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--card-border);border-radius:var(--radius);width:200px">
+              <button onclick="flagsOntsluitLB()" style="background:#166534;color:#fff;border:none;padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer">Ontsluit</button>
+              <span id="flagsLBFout" style="font-size:12px;color:#ef4444;display:none">Verkeerde wagwoord.</span>
+            </div>
+            <div id="flagsLBOntsluit" style="display:none;align-items:center;gap:8px">
+              <span style="font-size:12px;color:#166534;font-weight:500"><i class="ti ti-lock-open" aria-hidden="true" style="vertical-align:-2px;margin-right:3px"></i>Leerbestuurder</span>
+              <button onclick="flagsSluitLB()" style="background:none;border:1px solid var(--card-border);padding:5px 12px;border-radius:var(--radius);font-family:inherit;font-size:12px;cursor:pointer;color:#64748b">Sluit</button>
+            </div>
+            <button class="add-btn" onclick="openAddFlag()"><i class="ti ti-plus" aria-hidden="true"></i>Meld flag aan</button>
+          </div>
         </div>
         <table class="flags-table">
           <thead><tr><th>Datum</th><th>Vraestel</th><th>Leerder</th><th>Tipe flag</th><th>Kommentaar</th><th>Status</th><th>Uitkoms</th><th></th></tr></thead>
@@ -1171,8 +1183,11 @@ function renderFlags(){
       <td>${f.leerder}</td>
       <td><span class="flag-badge flag-tipe">${f.tipe||"—"}</span></td>
       <td style="font-size:12px;color:#64748b;max-width:160px">${f.kommentaar||"—"}</td>
-      <td><span class="flag-badge ${f.status==="Afgehandel"?"flag-aangemeld":"flag-uitstaande"}">${f.status||"Hangende"}</span></td>
-      <td style="font-size:12px;color:#64748b;max-width:160px">${f.uitkoms||"—"}</td>
+      <td>${flagsLBRol?`<select onchange="updateFlagStatus('${f.id}',this.value)" style="font-family:inherit;font-size:12px;padding:4px 8px;border-radius:var(--radius);border:1px solid var(--card-border);background:#fff;cursor:pointer;color:#1e293b">
+          <option value="Hangende" ${(f.status||"Hangende")==="Hangende"?"selected":""}>Hangende</option>
+          <option value="Afgehandel" ${f.status==="Afgehandel"?"selected":""}>Afgehandel</option>
+        </select>`:`<span class="flag-badge ${f.status==="Afgehandel"?"flag-aangemeld":"flag-uitstaande"}">${f.status||"Hangende"}</span>`}</td>
+      <td style="font-size:12px;color:#64748b;max-width:160px">${flagsLBRol?`<textarea onchange="updateFlagUitkoms('${f.id}',this.value)" rows="2" style="width:100%;min-width:140px;font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--card-border);border-radius:var(--radius);color:#1e293b;resize:vertical" placeholder="Uitkoms...">${f.uitkoms||""}</textarea>`:(f.uitkoms||"—")}</td>
       <td style="white-space:nowrap">
         <button class="icon-btn edit" onclick="editFlag('${f.id}')" title="Wysig"><i class="ti ti-edit" aria-hidden="true"></i></button>
         <button class="icon-btn del" onclick="delFlag('${f.id}')" title="Verwyder"><i class="ti ti-trash" aria-hidden="true"></i></button>
@@ -2192,6 +2207,34 @@ function toggleBevestig(eid){
 
 const LB_WAG="Leer01";
 
+let flagsLBRol=false;
+function flagsOntsluitLB(){
+  const w=document.getElementById("flagsLBWag").value;
+  if(w!==LB_WAG){document.getElementById("flagsLBFout").style.display="inline";return;}
+  document.getElementById("flagsLBFout").style.display="none";
+  document.getElementById("flagsLBWag").value="";
+  flagsLBRol=true;
+  document.getElementById("flagsLBSlot").style.display="none";
+  document.getElementById("flagsLBOntsluit").style.display="flex";
+  renderFlags();
+}
+function flagsSluitLB(){
+  flagsLBRol=false;
+  document.getElementById("flagsLBSlot").style.display="flex";
+  document.getElementById("flagsLBOntsluit").style.display="none";
+  renderFlags();
+}
+function updateFlagStatus(id,status){
+  const f=db.flags.find(f=>f.id===id);
+  if(!f)return;
+  f.status=status;save();renderFlags();renderStats();showToast("Flag: "+status);
+}
+function updateFlagUitkoms(id,uitkoms){
+  const f=db.flags.find(f=>f.id===id);
+  if(!f)return;
+  f.uitkoms=uitkoms;save();showToast("Uitkoms gestoor");
+}
+
 function checkLbWag(){
   const w=document.getElementById("lbWag").value;
   if(w===LB_WAG){
@@ -2211,6 +2254,10 @@ function resetLbSeksie(){
   document.getElementById("lbFout").style.display="none";
   document.getElementById("fStatus").value="Hangende";
   document.getElementById("fUitkoms").value="";
+  if(flagsLBRol){
+    document.getElementById("lbWagwoord").style.display="none";
+    document.getElementById("lbSeksie").style.display="block";
+  }
 }
 
 function openAddFlag(){
