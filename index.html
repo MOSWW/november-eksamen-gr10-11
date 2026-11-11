@@ -1173,7 +1173,8 @@ function renderBystand(){
 function renderFlags(){
   const tbody=document.getElementById("flagsBody");
   const empty=document.getElementById("flagsEmpty");
-  const items=db.flags.filter(f=>f.graad===currentGraad);
+  const idTyd=f=>parseInt(String(f.id||"").replace(/\D/g,""),10)||0;
+  const items=db.flags.filter(f=>f.graad===currentGraad).sort((a,b)=>(b.datum||"").localeCompare(a.datum||"")||idTyd(b)-idTyd(a));
   if(!items.length){tbody.innerHTML="";empty.style.display="block";return;}
   empty.style.display="none";
   tbody.innerHTML=items.map(f=>`
